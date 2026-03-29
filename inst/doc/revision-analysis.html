@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Revision Patterns and Statistics</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Revision Patterns and Statistics</h1>
+
+
+
+<p>This vignette provides a detailed explanation of the statistical
+measures and hypothesis tests used in
+<code>get_revision_analysis()</code>. The function is designed to
+analyze revisions between preliminary and final data releases, helping
+to assess bias, efficiency, correlation, seasonality, and the relative
+contributions of news and noise in revisions. The function returns a
+tibble with the desired statistics and hypothesis tests. In the
+following sections, we provide a detailed explanation of the statistics
+and hypothesis tests used in the function and provide the corresponding
+column name in brackets to assess it.</p>
+<p>Let’s define some notation to facilitate the discussion of the
+statistics and hypothesis tests used in the function:</p>
+<ul>
+<li><span class="math inline">\(y_t^h\)</span> denote the <span class="math inline">\(h\)</span>th released value for time <span class="math inline">\(t\)</span> with <span class="math inline">\(h=0\)</span> being the preliminary release</li>
+<li><span class="math inline">\(y_t^f\)</span> denote the final revised
+value for time <span class="math inline">\(t\)</span></li>
+<li><span class="math inline">\(r_t^f = y_t^f - y_t^h\)</span> be the
+final revision compared to the <span class="math inline">\(h\)</span>th
+release for time <span class="math inline">\(t\)</span></li>
+<li><span class="math inline">\(N\)</span> is the number of
+observations</li>
+</ul>
+<p>The function takes two mandatory arguments:</p>
+<ol style="list-style-type: decimal">
+<li>A data frame containing the preliminary data releases.</li>
+<li>A data frame containing the final release data against which the
+revisions are calculated and preliminary data will be compared.</li>
+</ol>
+<p>The function argument <code>degree</code> allows users to specify
+which statistics and hypothesis tests to include in the output:</p>
+<ul>
+<li><code>degree = 1</code> includes information about revision size
+(default)</li>
+<li><code>degree = 2</code> includes correlation statistics of
+revision</li>
+<li><code>degree = 3</code> includes news and noise tests</li>
+<li><code>degree = 4</code> includes sign switches, seasonality analysis
+and Theil’s U</li>
+<li><code>degree = 5</code> includes all the statistics and hypothesis
+tests</li>
+</ul>
+<div id="summary-statistics" class="section level2">
+<h2>Summary Statistics</h2>
+<div id="revision-size" class="section level3">
+<h3>Revision Size</h3>
+<p>Revisions provide insights into the reliability of initial data
+releases. Various metrics assess their magnitude and distribution:</p>
+<div id="mean-revision-bias-mean" class="section level4">
+<h4>1. <strong>Mean Revision</strong> (<code>&quot;Bias (mean)&quot;</code>)</h4>
+<p>The mean revision quantifies systematic bias in the revisions:</p>
+<p><span class="math display">\[
+   \text{Bias} = \bar{r} = \frac{1}{N} \sum_{t=1}^{N} r_t^{f}
+   \]</span></p>
+<p>If the mean revision is significantly different from zero, it
+indicates a tendency for initial releases to be systematically over- or
+under-estimated. A <strong>t-test</strong> is conducted to test the null
+hypothesis <span class="math inline">\(H_0: \bar{r} = 0\)</span>.</p>
+<ul>
+<li><code>&quot;Bias (p-value)&quot;</code> reports the standard t-test
+p-value.</li>
+<li><code>&quot;Bias (robust p-value)&quot;</code> provides a
+heteroskedasticity-robust alternative.</li>
+</ul>
+</div>
+<div id="mean-absolute-revision-mar" class="section level4">
+<h4>2. <strong>Mean Absolute Revision</strong> (<code>&quot;MAR&quot;</code>)</h4>
+<p>The mean absolute revision measures the average size of revisions,
+regardless of direction:</p>
+<p><span class="math display">\[
+   \text{MAR} = \frac{1}{N} \sum_{t=1}^{N} |r_t^{f}|
+   \]</span></p>
+<p>This metric is useful when evaluating the magnitude of revisions
+rather than their direction.</p>
+</div>
+<div id="minimum-and-maximum-revisions-minimum-maximum" class="section level4">
+<h4>3. <strong>Minimum and Maximum Revisions</strong>
+(<code>&quot;Minimum&quot;</code>, <code>&quot;Maximum&quot;</code>)</h4>
+<p>These statistics capture the most extreme downward and upward
+revisions in the dataset.</p>
+</div>
+<div id="percentiles-of-revisions-10q-median-90q" class="section level4">
+<h4>4. <strong>Percentiles of Revisions</strong> (<code>&quot;10Q&quot;</code>,
+<code>&quot;Median&quot;</code>, <code>&quot;90Q&quot;</code>)</h4>
+<p>The 10th, 50th (median), and 90th percentiles provide a
+distributional perspective, helping to identify skewness and tail
+behavior in revisions.</p>
+</div>
+<div id="standard-deviation-of-revisions-std.-dev." class="section level4">
+<h4>5. <strong>Standard Deviation of Revisions</strong>
+(<code>&quot;Std. Dev.&quot;</code>)</h4>
+<p>The standard deviation quantifies the dispersion of revisions:</p>
+<p><span class="math display">\[
+   \sigma_r = \sqrt{ \frac{1}{N-1} \sum_{t=1}^{N} (r_t^{f} - \bar{r})^2
+}
+   \]</span></p>
+<p>A higher standard deviation indicates greater variability in the
+revision process.</p>
+</div>
+<div id="noise-to-signal-ratio-noisesignal" class="section level4">
+<h4>6. <strong>Noise-to-Signal Ratio</strong>
+(<code>&quot;Noise/Signal&quot;</code>)</h4>
+<p>This metric measures the relative size of revisions compared to the
+total variance in the final data:</p>
+<p><span class="math display">\[
+   \frac{\sigma_r}{\sigma_y}
+   \]</span></p>
+<p>where <span class="math inline">\(\sigma_y\)</span> is the standard
+deviation of the final value <span class="math inline">\(y_t^f\)</span>.
+A high noise-to-signal ratio suggests that revisions are large relative
+to the underlying variability in the final data, indicating high
+uncertainty in initial estimates.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(reviser)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(tsbox)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>gdp <span class="ot">&lt;-</span> reviser<span class="sc">::</span>gdp <span class="sc">|&gt;</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="fu">ts_pc</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  <span class="fu">filter</span>(id <span class="sc">==</span> <span class="st">&quot;EA&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">get_nth_release</span>(gdp, <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>final_release <span class="ot">&lt;-</span> <span class="fu">get_latest_release</span>(gdp)</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">get_revision_analysis</span>(</span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>  df,</span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>  final_release,</span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>  <span class="at">degree =</span> <span class="dv">1</span></span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a>)</span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>results</span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a><span class="co">#&gt; === Revision Analysis Summary ===</span></span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 14</span></span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a><span class="co">#&gt;   id    release       N `Bias (mean)` `Bias (p-value)` `Bias (robust p-value)`</span></span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;         &lt;dbl&gt;            &lt;dbl&gt;                   &lt;dbl&gt;</span></span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a><span class="co">#&gt; 1 EA    release_0   178         0.055            0.002                   0    </span></span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a><span class="co">#&gt; 2 EA    release_1   177         0.05             0.004                   0.001</span></span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a><span class="co">#&gt; # ℹ 8 more variables: Minimum &lt;dbl&gt;, Maximum &lt;dbl&gt;, `10Q` &lt;dbl&gt;, Median &lt;dbl&gt;,</span></span>
+<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a><span class="co">#&gt; #   `90Q` &lt;dbl&gt;, MAR &lt;dbl&gt;, `Std. Dev.` &lt;dbl&gt;, `Noise/Signal` &lt;dbl&gt;</span></span>
+<span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a><span class="co">#&gt; === Interpretation ===</span></span>
+<span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-33"><a href="#cb1-33" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_0:</span></span>
+<span id="cb1-34"><a href="#cb1-34" tabindex="-1"></a><span class="co">#&gt;   • Significant upward bias detected (p = 0 )</span></span>
+<span id="cb1-35"><a href="#cb1-35" tabindex="-1"></a><span class="co">#&gt;   • Moderate revision volatility (Noise/Signal = 0.169 )</span></span>
+<span id="cb1-36"><a href="#cb1-36" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-37"><a href="#cb1-37" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_1:</span></span>
+<span id="cb1-38"><a href="#cb1-38" tabindex="-1"></a><span class="co">#&gt;   • Significant upward bias detected (p = 0.001 )</span></span>
+<span id="cb1-39"><a href="#cb1-39" tabindex="-1"></a><span class="co">#&gt;   • Moderate revision volatility (Noise/Signal = 0.165 )</span></span></code></pre></div>
+</div>
+</div>
+<div id="correlation-of-revisions" class="section level3">
+<h3>Correlation of Revisions</h3>
+<p>Understanding how revisions relate to initial releases and past
+revisions can reveal patterns in the revision process:</p>
+<div id="correlation-between-revisions-and-initial-releases-correlation" class="section level4">
+<h4>1. <strong>Correlation Between Revisions and Initial
+Releases</strong> (<code>&quot;Correlation&quot;</code>)</h4>
+<p>This measures whether revisions are systematically related to the
+initial release <span class="math inline">\(y_t^h\)</span>, which serves
+as a proxy for available information at the time of release:</p>
+<p><span class="math display">\[
+   \rho = \frac{\sum (y_t^h - \bar{y}^h) (r_t^f - \bar{r})}{\sqrt{\sum
+(y_t^h - \bar{y}^h)^2}  \sqrt{\sum (r_t^f - \bar{r})^2}}
+   \]</span></p>
+<p>A significant correlation suggests that initial estimates contain
+information that predicts later revisions. A <strong>t-test</strong>
+(<code>&quot;Correlation (p-value)&quot;</code>) is used to test whether <span class="math inline">\(\rho\)</span> is significantly different from
+zero.</p>
+</div>
+<div id="st-order-autocorrelation-of-revisions-autocorrelation-1st" class="section level4">
+<h4>2. <strong>1st order Autocorrelation of Revisions</strong>
+(<code>&quot;Autocorrelation (1st)&quot;</code>)</h4>
+<p>The <strong>first-order autocorrelation</strong> measures the
+persistence in the revision process by examining whether past revisions
+predict future revisions:</p>
+<p><span class="math display">\[
+   \rho_1 = \frac{\sum (r_t^f - \bar{r}) (r_{t-1}^f -
+\bar{r})}{\sqrt{\sum (r_t^f - \bar{r})^2 } \sqrt{\sum (r_{t-1}^f -
+\bar{r})^2}}
+   \]</span></p>
+<p>If revisions exhibit strong autocorrelation, it may indicate a
+systematic pattern in the revision process rather than purely random
+adjustments. A <strong>t-test</strong>
+(<code>&quot;Autocorrelation (1st p-value)&quot;</code>) is used to assess whether
+<span class="math inline">\(\rho_1\)</span> is significantly different
+from zero.</p>
+</div>
+<div id="autocorrelation-of-revisions-up-to-1-year-autocorrelation-up-to-1yr-ljung-box-p-value" class="section level4">
+<h4>3. <strong>Autocorrelation of Revisions up to 1 year</strong>
+(<code>&quot;Autocorrelation up to 1yr (Ljung-Box p-value)&quot;</code>)</h4>
+<p>This metric assesses the autocorrelation of revisions up to a lag of
+1 year using the Ljung-Box test. The null hypothesis of the Ljung-Box
+test is that there is <strong>no autocorrelation</strong> up to the
+specified lag. In other words, the revisions are independent of one
+another. The alternative hypothesis is that there <strong>is
+autocorrelation</strong> in the revisions.</p>
+<ul>
+<li><strong>For quarterly data (4 observations per year)</strong>, the
+test checks for autocorrelation up to <strong>4 lags</strong>.</li>
+<li><strong>For monthly data (12 observations per year)</strong>, the
+test checks for autocorrelation up to <strong>12 lags</strong>.</li>
+<li><strong>For other frequencies</strong>, the test is skipped.</li>
+</ul>
+<p>The Ljung-Box test statistic is computed using the following
+formula:</p>
+<p><span class="math display">\[
+  Q = N(N + 2) \sum_{k=1}^{m} \frac{\hat{\rho}_k^2}{N - k}
+  \]</span></p>
+<ul>
+<li><p><span class="math inline">\(Q\)</span> is the Ljung-Box
+statistic.</p></li>
+<li><p><span class="math inline">\(N\)</span> is the number of
+observations in the time series.</p></li>
+<li><p><span class="math inline">\(\hat{\rho}_k\)</span> is the
+<strong>sample autocorrelation</strong> at lag <span class="math inline">\(k\)</span>. This measures the correlation between
+the revisions at time <span class="math inline">\(t\)</span> and time
+<span class="math inline">\(t-k\)</span>.</p></li>
+<li><p><span class="math inline">\(m\)</span> is the number of lags
+considered (which corresponds to the frequency of the data: 4 for
+quarterly data, 12 for monthly data).</p>
+<p>The test statistic <span class="math inline">\(Q\)</span> is used to
+determine whether there is significant autocorrelation. If the
+autocorrelation at a particular lag is large, it suggests that the
+revisions at that lag are not independent of each other. The larger the
+<span class="math inline">\(Q\)</span>-statistic, the stronger the
+evidence that the revisions are autocorrelated.</p></li>
+</ul>
+<p>These metrics collectively help evaluate the reliability,
+predictability, and potential biases in data revisions.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">get_revision_analysis</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  df,</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  final_release,</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="at">degree =</span> <span class="dv">2</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>)</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="fu">head</span>(results)</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; === Revision Analysis Summary ===</span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 8</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt;   id    release      N Correlation Correlation (p-value…¹ Autocorrelation (1st…²</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;       &lt;dbl&gt;                  &lt;dbl&gt;                  &lt;dbl&gt;</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt; 1 EA    release…   178      -0.315                      0                 -0.092</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; 2 EA    release…   177      -0.318                      0                 -0.157</span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt; # ℹ abbreviated names: ¹​`Correlation (p-value)`, ²​`Autocorrelation (1st)`</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; # ℹ 2 more variables: `Autocorrelation (1st p-value)` &lt;dbl&gt;,</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt; #   `Autocorrelation up to 1yr (Ljung-Box p-value)` &lt;dbl&gt;</span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt; === Interpretation ===</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_0:</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co">#&gt;   • Significant negative correlation between revisions and initial values (ρ = -0.315 , p = 0 )</span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_1:</span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co">#&gt;   • Significant negative correlation between revisions and initial values (ρ = -0.318 , p = 0 )</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt;   • Significant autocorrelation in revisions</span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#&gt;               (ρ₁ = -0.157 ): revisions are persistent</span></span></code></pre></div>
+</div>
+</div>
+<div id="sign-switches" class="section level3">
+<h3>Sign Switches</h3>
+<p>Sign switches in data revisions can occur when the direction of an
+economic indicator changes between its initial release and later
+revisions. We define two key metrics to assess the stability of these
+directional signals:</p>
+<div id="fraction-of-sign-changes" class="section level4">
+<h4>1. <strong>Fraction of sign changes</strong></h4>
+<p>This metric (<code>&quot;Fraction of correct sign&quot;</code>) evaluates how
+often the sign of the initially reported value <span class="math inline">\(y_t^h\)</span> differs from the final revised
+value <span class="math inline">\(y_t^f\)</span>. Mathematically, we
+compute:</p>
+<p><span class="math display">\[
+   \text{Fraction of sign consistency} = \frac{\sum_{t=1}^{T}
+\mathbb{1}(\text{sign}(y_t^h) = \text{sign}(y_t^f))}{T}
+   \]</span></p>
+<p>where <span class="math inline">\(\mathbb{1}(\cdot)\)</span> is an
+indicator function that equals 1 if the signs match and 0 otherwise.</p>
+</div>
+<div id="fraction-of-sign-changes-in-the-growth-rate" class="section level4">
+<h4>2. <strong>Fraction of sign changes in the growth rate</strong></h4>
+<p>This metric (<code>&quot;Fraction of correct growth rate change&quot;</code>)
+assesses whether the direction of change in the variable remains
+consistent after revisions. Specifically, we compare the sign of the
+period-over-period differences:</p>
+<p><span class="math display">\[
+   \text{Fraction of sign consistency in growth} = \frac{\sum_{t=2}^{T}
+\mathbb{1}(\text{sign}(\Delta y_t^h) = \text{sign}(\Delta y_t^f))}{T-1}
+   \]</span></p>
+<p>where <span class="math inline">\(\Delta y_t^h = y_t^h -
+y_{t-1}^h\)</span> and <span class="math inline">\(\Delta y_t^f = y_t^f
+- y_{t-1}^f\)</span> represent the first differences of the initially
+reported and final values, respectively.</p>
+<p>A high fraction of incorrect signs in either metric suggests that
+early estimates may be unreliable in capturing the true direction of the
+variable.</p>
+</div>
+</div>
+</div>
+<div id="hypothesis-tests" class="section level2">
+<h2>Hypothesis Tests</h2>
+<div id="news-and-noise-tests-for-data-revisions" class="section level3">
+<h3>News and Noise Tests for Data Revisions</h3>
+<p>The <strong>news and noise tests</strong> analyze the properties of
+<strong>data revisions</strong> in relation to the final and preliminary
+releases of an economic variable. These tests help to evaluate whether
+the revisions are systematic, whether they contain new information, or
+whether they are simply noisy adjustments <span class="citation">(<a href="#ref-mankiwNewsNoiseAnalysis1986">Mankiw and Shapiro 1986</a>; <a href="#ref-aruobaDataRevisionsAre2008">Aruoba 2008</a>)</span>.</p>
+<p><strong>Final revisions</strong> can be classified into two
+categories:</p>
+<ol style="list-style-type: lower-roman">
+<li><p><strong>Noise:</strong> The initial announcement is an
+observation of the final series, measured with error. This means that
+the revision is uncorrelated with the final value but correlated with
+the data available when the estimate is made.</p></li>
+<li><p><strong>News:</strong> The initial announcement is an efficient
+forecast that reflects all available information, and subsequent
+estimates reduce the forecast error by incorporating new information.
+The revision is correlated with the final value but uncorrelated with
+the data available when the estimate is made, i.e., unpredictable using
+the information set at the time of the initial announcement.</p></li>
+</ol>
+<p>To test these categories, we run <strong>two regression
+tests:</strong></p>
+<div id="the-noise-test" class="section level4">
+<h4>1. <strong>The Noise Test</strong></h4>
+<p>The <strong>noise test</strong> examines whether the
+<strong>revision</strong> can be predicted by the final value:</p>
+<p><span class="math display">\[
+  {r}_t^f = \alpha + \beta \cdot {y_t^f} + \epsilon_t
+  \]</span></p>
+<p>If the preliminary value were an <strong>efficient and unbiased
+estimate</strong> of the final value (i.e incorporating all relevant
+information), revisions should be <strong>uncorrelated</strong> with the
+final value. The null hypothesis is:</p>
+<p><span class="math display">\[
+  H_0: \alpha = 0, \quad \beta = 0
+  \]</span></p>
+<ul>
+<li>The function tests the joint hypothesis
+(<code>&quot;Noise joint test (p-value)&quot;</code>) that both <span class="math inline">\(\alpha = 0\)</span> and <span class="math inline">\(\beta = 0\)</span> using a
+<strong>heteroskedasticity and autocorrelation consistent (HAC)
+covariance matrix</strong> to ensure robust inference.</li>
+<li><span class="math inline">\(\alpha = 0\)</span> tests
+(<code>&quot;Noise test Intercept (p-value)&quot;</code>) whether the revisions
+have a systematic bias.</li>
+<li><span class="math inline">\(\beta = 0\)</span> tests
+(<code>&quot;Noise test Coefficient (p-value)&quot;</code>) whether the revisions
+are correlated with the final value, indicating inefficiency.</li>
+</ul>
+</div>
+<div id="the-news-test" class="section level4">
+<h4>2. <strong>The News Test</strong></h4>
+<p>The <strong>news test</strong> examines whether the revision is
+predictable using the preliminary release:</p>
+<p><span class="math display">\[
+{r}_t^f = \alpha + \beta \cdot {y}_t^h + \epsilon_t
+\]</span></p>
+<p>Here, we test whether revisions are <strong>systematically
+related</strong> to the initial value. The null hypothesis is:</p>
+<p><span class="math display">\[
+H_0: \alpha = 0, \quad \beta = 0
+\]</span></p>
+<ul>
+<li>The function tests the joint hypothesis
+(<code>&quot;News joint test (p-value)&quot;</code>) that both <span class="math inline">\(\alpha = 0\)</span> and <span class="math inline">\(\beta = 0\)</span> using a <strong>HAC covariance
+matrix</strong> to ensure robust inference.</li>
+<li><span class="math inline">\(\alpha = 0\)</span> tests
+(<code>&quot;News test Intercept (p-value)&quot;</code>) whether the revisions
+have a systematic bias.</li>
+<li><span class="math inline">\(\beta = 0\)</span> tests
+(<code>&quot;News test Coefficient (p-value)&quot;</code>) whether the revisions
+are correlated with the initial value, indicating inefficiency.</li>
+</ul>
+<p>Note: Instead of regressing <span class="math inline">\(r_t^f\)</span> on <span class="math inline">\(y_t^f\)</span> or <span class="math inline">\(y_t^h\)</span>, one can similarly regress <span class="math display">\[
+  \text{Noise: } \quad y_t^h = \alpha + \beta \cdot y_t^f + \epsilon_t
+\\
+  \text{News: } \quad y_t^f = \alpha + \beta \cdot y_t^h + \epsilon_t
+\]</span> and test <span class="math inline">\(\alpha = 0\)</span> and
+<span class="math inline">\(\beta = 1\)</span> for the presence of noise
+and news in the data revisions.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">get_revision_analysis</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  df,</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  final_release,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="at">degree =</span> <span class="dv">3</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>)</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="fu">head</span>(results)</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; === Revision Analysis Summary ===</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 17</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt;   id    release       N `News test Intercept` `News test Intercept (std.err)`</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;                 &lt;dbl&gt;                           &lt;dbl&gt;</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; 1 EA    release_0   178                 0.074                           0.02 </span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; 2 EA    release_1   177                 0.069                           0.018</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; # ℹ 12 more variables: `News test Intercept (p-value)` &lt;dbl&gt;,</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; #   `News test Coefficient` &lt;dbl&gt;, `News test Coefficient (std.err)` &lt;dbl&gt;,</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; #   `News test Coefficient (p-value)` &lt;dbl&gt;, `News joint test (p-value)` &lt;dbl&gt;,</span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; #   `Noise test Intercept` &lt;dbl&gt;, `Noise test Intercept (std.err)` &lt;dbl&gt;,</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; #   `Noise test Intercept (p-value)` &lt;dbl&gt;, `Noise test Coefficient` &lt;dbl&gt;,</span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; #   `Noise test Coefficient (std.err)` &lt;dbl&gt;,</span></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt; #   `Noise test Coefficient (p-value)` &lt;dbl&gt;, …</span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt; === Interpretation ===</span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_0:</span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co">#&gt;   • Revisions contain NEWS (p = 0 ): systematic information</span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="co">#&gt;   • Revisions contain NOISE (p = 0.007 ): measurement error</span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_1:</span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co">#&gt;   • Revisions contain NEWS (p = 0 ): systematic information</span></span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="co">#&gt;   • Revisions contain NOISE (p = 0.005 ): measurement error</span></span></code></pre></div>
+</div>
+</div>
+<div id="test-of-seasonality-in-revisions" class="section level3">
+<h3>Test of Seasonality in Revisions</h3>
+<p>To test whether seasonality is present in revisions, we employ a
+Friedman test. Note that this test is always performed on
+first-differentiated series.</p>
+<div id="friedman-test" class="section level4">
+<h4><strong>Friedman Test</strong></h4>
+<p>The Friedman test (<code>&quot;Seasonality (Friedman p-value)&quot;</code>) is
+a non-parametric statistical test that examines whether the distribution
+of ranked data differs systematically across seasonal periods, such as
+months or quarters. It does not require distributional assumptions,
+making it a robust tool for detecting seasonality in revision series.
+The test is applied by first transforming the revision series into a
+matrix where each row represents a year and each column represents a
+specific month or quarter. It is constructed as follows. Consider first
+the matrix of data <span class="math inline">\(\{x_{ij}\}_{n \times
+k}\)</span> with <span class="math inline">\(n\)</span> rows (i.e., the
+number of years in the sample) and <span class="math inline">\(k\)</span> columns (i.e., either 12 months or 4
+quarters, depending on the frequency of the data). The data matrix needs
+to be replaced by a new matrix <span class="math inline">\(\{r_{ij}\}_{n
+\times k}\)</span>, where the entry <span class="math inline">\(r_{ij}\)</span> is the rank of <span class="math inline">\(x_{ij}\)</span> within the row <span class="math inline">\(i\)</span>. The test is executed using the
+<code>stats::friedman.test()</code> function. The null hypothesis is
+that the average ranking across columns is the same, indicating no
+seasonality in the revisions.</p>
+</div>
+</div>
+<div id="theils-u-statistics" class="section level3">
+<h3>Theil’s U Statistics</h3>
+<p>In the context of revision analysis, <strong>Theil’s inequality
+coefficient</strong>, or <strong>Theil’s U</strong>, provides a measure
+of the accuracy of a initial estimates (<span class="math inline">\(y_t^h\)</span>) relative to final or more refined
+values (<span class="math inline">\(y_t^f\)</span>). Various definitions
+of Theil’s statistics exist, leading to different interpretations. This
+package considers two widely used variants: <strong>U1</strong> and
+<strong>U2</strong>.</p>
+<div id="theils-u1-statistic-theils-u1" class="section level4">
+<h4>1. <strong>Theil’s U1 Statistic</strong>
+(<code>&quot;Theil&#39;s U1&quot;</code>)</h4>
+<p>The first measure, <strong>U1</strong>, is given by:</p>
+<p><span class="math display">\[
+U_1 =
+\frac{\sqrt{\frac{1}{n}\sum^n_{t=1}(y_t^f-y_t^h)^2}}{\sqrt{\frac{1}{n}\sum^n_{t=1}{y_t^f}^2}+\sqrt{\frac{1}{n}\sum^n_{t=1}{y_t^h}^2}}
+\]</span></p>
+<p>The <strong>U1 statistic is bounded between 0 and 1</strong>:</p>
+<ul>
+<li>A value of <strong>0</strong> implies perfect forecasting (<span class="math inline">\(y_t^h = y_t^f\)</span> for all <span class="math inline">\(t\)</span>).</li>
+<li>A value <strong>closer to 1</strong> indicates lower accuracy.</li>
+</ul>
+<p>However, U1 suffers from <strong>several limitations</strong>, as
+highlighted by <span class="citation">Granger and Newbold (<a href="#ref-Granger01031973">1973</a>)</span>. A critical issue arises
+when <strong>one of <span class="math inline">\(y_t^h\)</span> or <span class="math inline">\(y_t^f\)</span> equals zero in all
+periods</strong>. In such cases, the denominator and numerator become
+equal, leading to <strong>U1 = 1</strong> even when preliminary
+estimates are close to the final values.</p>
+</div>
+<div id="theils-u2-statistic-theils-u2" class="section level4">
+<h4>2. <strong>Theil’s U2 Statistic</strong>
+(<code>&quot;Theil&#39;s U2&quot;</code>)</h4>
+<p>To address these shortcomings, <span class="citation">Theil et al.
+(<a href="#ref-theil1966applied">1966</a>)</span> proposed an
+alternative measure, <strong>U2</strong>, which is defined as:</p>
+<p><span class="math display">\[
+U_2 = \frac{\sqrt{\sum_{t=1}^{n} \left( \frac{y_{t+1}^h-
+y_{t+1}^f}{Y_t^f} \right)^2}}{\sqrt{\sum_{t=1}^{n} \left(
+\frac{y_{t+1}^f - y_t^f}{Y_t^f} \right)^2}}
+\]</span></p>
+<p>where:</p>
+<ul>
+<li>The numerator captures the <strong>relative errors</strong> in the
+preliminary estimates.</li>
+<li>The denominator measures the <strong>magnitude of changes</strong>
+in the final values over time.</li>
+</ul>
+<p>Unlike U1, <strong>U2 is not bounded between 0 and 1</strong>.
+Instead:</p>
+<ul>
+<li>A value of <strong>0</strong> implies perfect accuracy (<span class="math inline">\(y_{t}^h = y_{t}^f\)</span> for all <span class="math inline">\(t\)</span>).</li>
+<li><strong><span class="math inline">\(U_2 = 1\)</span></strong> means
+the accuracy of the preliminary estimates is equal to a <strong>naïve
+forecast</strong>.</li>
+<li><strong><span class="math inline">\(U_2 &gt; 1\)</span></strong>
+suggests the preliminary estimates are <strong>less accurate</strong>
+than the naïve approach.</li>
+<li><strong><span class="math inline">\(U_2 &lt; 1\)</span></strong>
+indicates the preliminary estimates are <strong>more accurate</strong>
+than the naïve method.</li>
+</ul>
+<p>Whenever possible (<strong>if <span class="math inline">\(y_{t}^f
+\neq 0\)</span> for all <span class="math inline">\(t\)</span></strong>), <strong>U2 is the preferred
+metric</strong> for evaluating preliminary estimates.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">get_revision_analysis</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  df,</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  final_release,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">degree =</span> <span class="dv">4</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="fu">head</span>(results)</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; === Revision Analysis Summary ===</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 8</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt;   id    release     N Fraction of correct …¹ Fraction of correct …² `Theil&#39;s U1`</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;dbl&gt;                  &lt;dbl&gt;                  &lt;dbl&gt;        &lt;dbl&gt;</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; 1 EA    releas…   178                  0.944                  0.764        0.082</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; 2 EA    releas…   177                  0.944                  0.763        0.08 </span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt; # ℹ abbreviated names: ¹​`Fraction of correct sign`,</span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt; #   ²​`Fraction of correct growth rate change`</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; # ℹ 2 more variables: `Theil&#39;s U2` &lt;dbl&gt;,</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; #   `Seasonality (Friedman p-value)` &lt;dbl&gt;</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt; === Interpretation ===</span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_0:</span></span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co">#&gt;   • Good forecast accuracy (Theil&#39;s U1 = 0.082 )</span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt;   • Excellent sign prediction (94.4% correct)</span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_1:</span></span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a><span class="co">#&gt;   • Good forecast accuracy (Theil&#39;s U1 = 0.08 )</span></span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="co">#&gt;   • Excellent sign prediction (94.4% correct)</span></span></code></pre></div>
+<p>In the above examples, we analyze GDP revisions by comparing the
+final release with the first and second releases, which correspond to
+the diagonal elements of the real-time data matrix. This approach
+provides insight into how initial estimates evolve over time.</p>
+<p>Alternatively, we can compare GDP revisions between specific
+publication dates. In the example below, we analyze revisions from the
+GDP releases from April and July 2024, using the final release from
+October 2024 as the benchmark. The grouping of statistics is by default
+determined by the <code>pub_date</code> or <code>release</code> column.
+Alternatively, it can be specified via the optional function argument
+<code>grouping_var</code>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>df <span class="ot">&lt;-</span> gdp <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">filter</span>(pub_date <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;2024-04-01&quot;</span>, <span class="st">&quot;2024-07-01&quot;</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">get_revision_analysis</span>(</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  df,</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  final_release,</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  <span class="at">degree =</span> <span class="dv">5</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>)</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>results</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; === Revision Analysis Summary ===</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 39</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt;   id    pub_date       N Frequency `Bias (mean)` `Bias (p-value)`</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;date&gt;     &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;            &lt;dbl&gt;</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; 1 EA    2024-04-01   176         4         0.007            0.159</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; 2 EA    2024-07-01   177         4         0.002            0.52 </span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; # ℹ 33 more variables: `Bias (robust p-value)` &lt;dbl&gt;, Minimum &lt;dbl&gt;,</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; #   Maximum &lt;dbl&gt;, `10Q` &lt;dbl&gt;, Median &lt;dbl&gt;, `90Q` &lt;dbl&gt;, MAR &lt;dbl&gt;,</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; #   `Std. Dev.` &lt;dbl&gt;, `Noise/Signal` &lt;dbl&gt;, Correlation &lt;dbl&gt;,</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; #   `Correlation (p-value)` &lt;dbl&gt;, `Autocorrelation (1st)` &lt;dbl&gt;,</span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt; #   `Autocorrelation (1st p-value)` &lt;dbl&gt;,</span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt; #   `Autocorrelation up to 1yr (Ljung-Box p-value)` &lt;dbl&gt;, `Theil&#39;s U1` &lt;dbl&gt;,</span></span>
+<span id="cb5-26"><a href="#cb5-26" tabindex="-1"></a><span class="co">#&gt; #   `Theil&#39;s U2` &lt;dbl&gt;, `Seasonality (Friedman p-value)` &lt;dbl&gt;, …</span></span>
+<span id="cb5-27"><a href="#cb5-27" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-28"><a href="#cb5-28" tabindex="-1"></a><span class="co">#&gt; === Interpretation ===</span></span>
+<span id="cb5-29"><a href="#cb5-29" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-30"><a href="#cb5-30" tabindex="-1"></a><span class="co">#&gt; id=EA, pub_date=2024-04-01:</span></span>
+<span id="cb5-31"><a href="#cb5-31" tabindex="-1"></a><span class="co">#&gt;   • Significant upward bias detected (p = 0.033 )</span></span>
+<span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co">#&gt;   • Very low revision volatility (Noise/Signal = 0.045 )</span></span>
+<span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain news (p = 0.237 )</span></span>
+<span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain noise (p = 0.069 )</span></span>
+<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a><span class="co">#&gt;   • Significant autocorrelation in revisions</span></span>
+<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a><span class="co">#&gt;               (ρ₁ = -0.201 ): revisions are persistent</span></span>
+<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a><span class="co">#&gt;   • Good forecast accuracy (Theil&#39;s U1 = 0.022 )</span></span>
+<span id="cb5-38"><a href="#cb5-38" tabindex="-1"></a><span class="co">#&gt;   • Excellent sign prediction (97.2% correct)</span></span>
+<span id="cb5-39"><a href="#cb5-39" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-40"><a href="#cb5-40" tabindex="-1"></a><span class="co">#&gt; id=EA, pub_date=2024-07-01:</span></span>
+<span id="cb5-41"><a href="#cb5-41" tabindex="-1"></a><span class="co">#&gt;   • No significant bias detected (p = 0.375 )</span></span>
+<span id="cb5-42"><a href="#cb5-42" tabindex="-1"></a><span class="co">#&gt;   • Very low revision volatility (Noise/Signal = 0.031 )</span></span>
+<span id="cb5-43"><a href="#cb5-43" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain news (p = 0.579 )</span></span>
+<span id="cb5-44"><a href="#cb5-44" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain noise (p = 0.279 )</span></span>
+<span id="cb5-45"><a href="#cb5-45" tabindex="-1"></a><span class="co">#&gt;   • Good forecast accuracy (Theil&#39;s U1 = 0.015 )</span></span>
+<span id="cb5-46"><a href="#cb5-46" tabindex="-1"></a><span class="co">#&gt;   • Excellent sign prediction (98.9% correct)</span></span></code></pre></div>
+<p>The <code>get_revision_analysis()</code> function requires a single
+time series in <code>final_release</code> and compares it to multiple
+time series in <code>df</code> for the same <code>id</code>. To always
+compare two consecutive publication dates, it is necessary to structure
+the analysis sequentially. The code below iterates over consecutive
+publication dates in the gdp dataset, comparing revisions between each
+pair. For each pair of consecutive dates, it extracts the corresponding
+data, runs <code>get_revision_analysis()</code> to analyze revisions,
+and then combines the results into a single dataframe.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Get unique sorted publication dates</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>pub_dates <span class="ot">&lt;-</span> gdp <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="fu">distinct</span>(pub_date) <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="fu">arrange</span>(pub_date) <span class="sc">|&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="fu">pull</span>(pub_date)</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co"># Run the function for each pair of consecutive publication dates</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>results <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map_dfr</span>(<span class="fu">seq_along</span>(pub_dates[<span class="sc">-</span><span class="fu">length</span>(pub_dates)]),</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  <span class="cf">function</span>(i) {</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>    df <span class="ot">&lt;-</span> gdp <span class="sc">|&gt;</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>      <span class="fu">filter</span>(pub_date <span class="sc">%in%</span> pub_dates[i])</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>    final_release <span class="ot">&lt;-</span> gdp <span class="sc">|&gt;</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>      <span class="fu">filter</span>(pub_date <span class="sc">%in%</span> pub_dates[i <span class="sc">+</span> <span class="dv">1</span>])</span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>    <span class="fu">get_revision_analysis</span>(df, final_release, <span class="at">degree =</span> <span class="dv">5</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>  }</span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>)</span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="fu">head</span>(results)</span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-aruobaDataRevisionsAre2008" class="csl-entry">
+Aruoba, S. Borağan. 2008. <span>“Data <span>Revisions Are Not Well
+Behaved</span>.”</span> <em>Journal of Money, Credit and Banking</em> 40
+(2-3): 319–40. <a href="https://doi.org/10.1111/j.1538-4616.2008.00115.x">https://doi.org/10.1111/j.1538-4616.2008.00115.x</a>.
+</div>
+<div id="ref-Granger01031973" class="csl-entry">
+Granger, C. W. J., and P. Newbold. 1973. <span>“Some Comments on the
+Evaluation of Economic Forecasts.”</span> <em>Applied Economics</em> 5
+(1): 35–47. <a href="https://doi.org/10.1080/00036847300000003">https://doi.org/10.1080/00036847300000003</a>.
+</div>
+<div id="ref-mankiwNewsNoiseAnalysis1986" class="csl-entry">
+Mankiw, N. Gregory, and Matthew Shapiro. 1986. <span>“News or
+<span>Noise</span>? <span>An Analysis</span> of <span>GNP
+Revisions</span>.”</span> w1939. Cambridge, MA: National Bureau of
+Economic Research. <a href="https://doi.org/10.3386/w1939">https://doi.org/10.3386/w1939</a>.
+</div>
+<div id="ref-theil1966applied" class="csl-entry">
+Theil, Henri, GAC Beerens, CG Tilanus, and Christiaan Bernhard De Leeuw.
+1966. <em>Applied Economic Forecasting</em>. Vol. 4. North-Holland
+Publishing Company Amsterdam.
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

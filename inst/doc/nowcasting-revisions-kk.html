@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Nowcasting revisions using the generalized Kishor-Koenig family</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Nowcasting revisions using the generalized
+Kishor-Koenig family</h1>
+
+
+
+<p>This vignette describes the generalized Kishor-Koenig (KK) revision
+model and its nested variants as implemented in
+<code>reviser::kk_nowcast()</code>. The exposition uses the same
+Durbin-Koopman state-space notation that appears throughout the package
+documentation: observation matrices are denoted by <span class="math inline">\(Z\)</span>, transition matrices by <span class="math inline">\(T\)</span>, shock-loading matrices by <span class="math inline">\(R\)</span>, and disturbance covariance matrices by
+<span class="math inline">\(H\)</span> and <span class="math inline">\(Q\)</span> <span class="citation">(<a href="#ref-durbinTimeSeriesAnalysis2012">Durbin and Koopman
+2012</a>)</span>.</p>
+<p>The motivation is straightforward. Early releases of macroeconomic
+series are often revised several times before they settle near a stable
+value. Rather than ignoring that revision process, the KK family models
+the vector of releases directly and uses the Kalman filter to infer the
+latent efficient estimate.</p>
+<div id="revision-system" class="section level2">
+<h2>Revision system</h2>
+<p>Suppose that an efficient estimate becomes available after <span class="math inline">\(e\)</span> revisions. Let <span class="math inline">\(y_t^j\)</span> denote the <span class="math inline">\(j\)</span>-th release for reference period <span class="math inline">\(t\)</span>, where <span class="math inline">\(j =
+0, \dots, e\)</span>. Following <span class="citation">Strohsal and Wolf
+(<a href="#ref-strohsalDataRevisionsGerman2020">2020</a>)</span>, stack
+the efficient estimates and the observed real-time releases as</p>
+<p><span class="math display">\[
+z_t =
+\begin{bmatrix}
+y_{t-e}^{e} \\
+y_{t-e+1}^{e} \\
+\vdots \\
+y_t^{e}
+\end{bmatrix},
+\qquad
+y_t =
+\begin{bmatrix}
+y_{t-e}^{e} \\
+y_{t-e+1}^{e-1} \\
+\vdots \\
+y_t^{0}
+\end{bmatrix}.
+\]</span></p>
+<p>The generalized KK model is</p>
+<p><span class="math display">\[
+z_t = F z_{t-1} + \nu_t,
+\qquad
+\nu_t \sim N(0, V),
+\]</span></p>
+<p><span class="math display">\[
+y_t = (I - G) F y_{t-1} + G z_t + \epsilon_t,
+\qquad
+\epsilon_t \sim N(0, W).
+\]</span></p>
+<p>The companion-form transition matrix is</p>
+<p><span class="math display">\[
+F =
+\begin{bmatrix}
+0 &amp; 1 &amp; 0 &amp; \cdots &amp; 0 \\
+0 &amp; 0 &amp; 1 &amp; \cdots &amp; 0 \\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+0 &amp; 0 &amp; 0 &amp; \cdots &amp; 1 \\
+0 &amp; 0 &amp; 0 &amp; \cdots &amp; F_0
+\end{bmatrix},
+\]</span></p>
+<p>and the gain matrix is</p>
+<p><span class="math display">\[
+G =
+\begin{bmatrix}
+1 &amp; 0 &amp; \cdots &amp; 0 \\
+G_{e-1,e} &amp; G_{e-1,e-1} &amp; \cdots &amp; G_{e-1,0} \\
+G_{e-2,e} &amp; G_{e-2,e-1} &amp; \cdots &amp; G_{e-2,0} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+G_{0,e} &amp; G_{0,e-1} &amp; \cdots &amp; G_{0,0}
+\end{bmatrix}.
+\]</span></p>
+<p>Intuitively, <span class="math inline">\(F\)</span> governs the
+dynamics of the efficient estimate, while <span class="math inline">\(G\)</span> controls how quickly incoming releases
+absorb new information. The covariance matrices <span class="math inline">\(V\)</span> and <span class="math inline">\(W\)</span> describe uncertainty in the latent
+efficient estimate and the published releases, respectively.</p>
+</div>
+<div id="nested-models" class="section level2">
+<h2>Nested models</h2>
+<p>The generalized KK setup nests two useful special cases.</p>
+<ul>
+<li>The <strong>Classical measurement-error model</strong> is obtained
+by setting <span class="math inline">\(G = I\)</span>. In that case,
+published data are noisy measurements of the latent efficient estimate,
+with no revision persistence beyond the state dynamics.</li>
+<li>The <strong>Howrey model</strong> <span class="citation">(<a href="#ref-howreyUsePreliminaryData1978">Howrey 1978</a>)</span> allows
+revision persistence but restricts the gain matrix by imposing <span class="math inline">\(G_{e-i,0} = 0\)</span> for <span class="math inline">\(i = 1, \dots, e-1\)</span> and <span class="math inline">\(G_{0,0} = 1\)</span>.</li>
+</ul>
+<p>The <code>model</code> argument in <code>kk_nowcast()</code> selects
+among these specifications: <code>&quot;KK&quot;</code>, <code>&quot;Howrey&quot;</code>,
+and <code>&quot;Classical&quot;</code>.</p>
+</div>
+<div id="durbin-koopman-state-space-form" class="section level2">
+<h2>Durbin-Koopman state-space form</h2>
+<p>To run filtering and smoothing, <code>reviser</code> casts the KK
+system into the standard time-invariant state-space form</p>
+<p><span class="math display">\[
+y_t = Z \alpha_t + \varepsilon_t,
+\qquad
+\varepsilon_t \sim N(0, H),
+\]</span></p>
+<p><span class="math display">\[
+\alpha_{t+1} = T \alpha_t + R \eta_t,
+\qquad
+\eta_t \sim N(0, Q).
+\]</span></p>
+<p>Define the augmented state as</p>
+<p><span class="math display">\[
+\alpha_t =
+\begin{bmatrix}
+z_t \\
+r_t
+\end{bmatrix},
+\qquad
+r_t = y_t - z_t.
+\]</span></p>
+<p>With this choice of state vector, the implementation in
+<code>kk_to_ss()</code> uses</p>
+<p><span class="math display">\[
+Z = \begin{bmatrix} I &amp; I \end{bmatrix},
+\qquad
+T =
+\begin{bmatrix}
+F &amp; 0 \\
+0 &amp; (I - G) F
+\end{bmatrix},
+\qquad
+R = I.
+\]</span></p>
+<p>The observation disturbance is set to zero, so <span class="math inline">\(H = 0\)</span>. All uncertainty is collected in
+the state disturbance covariance matrix</p>
+<p><span class="math display">\[
+Q =
+\begin{bmatrix}
+V &amp; -V (I - G)&#39; \\
+-(I - G) V &amp; W + (I - G) V (I - G)&#39;
+\end{bmatrix}.
+\]</span></p>
+<p>This is exactly the Durbin-Koopman representation used internally by
+<code>reviser</code>: the Kalman filter and smoother operate on <span class="math inline">\((Z, T, R, H, Q)\)</span>, while the KK-specific
+parameters <span class="math inline">\((F, G, V, W)\)</span> remain the
+economically interpretable layer.</p>
+</div>
+<div id="estimation-in-reviser" class="section level2">
+<h2>Estimation in <code>reviser</code></h2>
+<p><code>kk_nowcast()</code> supports three estimators.</p>
+<ul>
+<li><code>method = &quot;SUR&quot;</code> estimates the original revision
+equations jointly by seemingly unrelated regression using
+<code>systemfit::nlsystemfit()</code>.</li>
+<li><code>method = &quot;OLS&quot;</code> estimates the equations one by one. This
+is fast, but the cross-equation restrictions are not fully
+efficient.</li>
+<li><code>method = &quot;MLE&quot;</code> estimates the state-space model by
+maximum likelihood using the Kalman filter.</li>
+</ul>
+<p>For applied work, the MLE route is usually the most flexible because
+it supports information criteria, Hessian- or QML-based standard errors,
+and filtered or smoothed states directly from the state-space model.</p>
+</div>
+<div id="example-euro-area-gdp-revisions" class="section level2">
+<h2>Example: Euro Area GDP revisions</h2>
+<p>We illustrate the workflow with Euro Area GDP growth from
+<code>reviser::gdp</code>. We first identify an efficient release among
+the first 15 vintages, then estimate the full KK model.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(reviser)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(tsbox)</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>gdp <span class="ot">&lt;-</span> reviser<span class="sc">::</span>gdp <span class="sc">|&gt;</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>  tsbox<span class="sc">::</span><span class="fu">ts_pc</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>    id <span class="sc">==</span> <span class="st">&quot;EA&quot;</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a>    time <span class="sc">&gt;=</span> <span class="fu">min</span>(pub_date),</span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>    time <span class="sc">&lt;=</span> <span class="fu">as.Date</span>(<span class="st">&quot;2020-01-01&quot;</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">drop_na</span>()</span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">get_nth_release</span>(gdp, <span class="at">n =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">14</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a>final_release <span class="ot">&lt;-</span> <span class="fu">get_nth_release</span>(gdp, <span class="at">n =</span> <span class="dv">15</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" tabindex="-1"></a>efficient_release <span class="ot">&lt;-</span> <span class="fu">load_or_build_vignette_result</span>(</span>
+<span id="cb1-19"><a href="#cb1-19" tabindex="-1"></a>  <span class="st">&quot;nowcasting-revisions-kk-efficient-release.rds&quot;</span>,</span>
+<span id="cb1-20"><a href="#cb1-20" tabindex="-1"></a>  <span class="cf">function</span>() <span class="fu">get_first_efficient_release</span>(df, final_release)</span>
+<span id="cb1-21"><a href="#cb1-21" tabindex="-1"></a>)</span>
+<span id="cb1-22"><a href="#cb1-22" tabindex="-1"></a><span class="fu">summary</span>(efficient_release)</span>
+<span id="cb1-23"><a href="#cb1-23" tabindex="-1"></a><span class="co">#&gt; Efficient release:  2 </span></span>
+<span id="cb1-24"><a href="#cb1-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-25"><a href="#cb1-25" tabindex="-1"></a><span class="co">#&gt; Model summary: </span></span>
+<span id="cb1-26"><a href="#cb1-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-27"><a href="#cb1-27" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb1-28"><a href="#cb1-28" tabindex="-1"></a><span class="co">#&gt; stats::lm(formula = formula, data = df_wide)</span></span>
+<span id="cb1-29"><a href="#cb1-29" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-30"><a href="#cb1-30" tabindex="-1"></a><span class="co">#&gt; Residuals:</span></span>
+<span id="cb1-31"><a href="#cb1-31" tabindex="-1"></a><span class="co">#&gt;      Min       1Q   Median       3Q      Max </span></span>
+<span id="cb1-32"><a href="#cb1-32" tabindex="-1"></a><span class="co">#&gt; -0.34873 -0.08185 -0.00706  0.10475  0.31533 </span></span>
+<span id="cb1-33"><a href="#cb1-33" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-34"><a href="#cb1-34" tabindex="-1"></a><span class="co">#&gt; Coefficients:</span></span>
+<span id="cb1-35"><a href="#cb1-35" tabindex="-1"></a><span class="co">#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    </span></span>
+<span id="cb1-36"><a href="#cb1-36" tabindex="-1"></a><span class="co">#&gt; (Intercept)  0.03276    0.01775   1.846   0.0692 .  </span></span>
+<span id="cb1-37"><a href="#cb1-37" tabindex="-1"></a><span class="co">#&gt; release_2    1.01446    0.02440  41.577   &lt;2e-16 ***</span></span>
+<span id="cb1-38"><a href="#cb1-38" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb1-39"><a href="#cb1-39" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb1-40"><a href="#cb1-40" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-41"><a href="#cb1-41" tabindex="-1"></a><span class="co">#&gt; Residual standard error: 0.1428 on 68 degrees of freedom</span></span>
+<span id="cb1-42"><a href="#cb1-42" tabindex="-1"></a><span class="co">#&gt; Multiple R-squared:  0.9622, Adjusted R-squared:  0.9616 </span></span>
+<span id="cb1-43"><a href="#cb1-43" tabindex="-1"></a><span class="co">#&gt; F-statistic:  1729 on 1 and 68 DF,  p-value: &lt; 2.2e-16</span></span>
+<span id="cb1-44"><a href="#cb1-44" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-45"><a href="#cb1-45" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-46"><a href="#cb1-46" tabindex="-1"></a><span class="co">#&gt; Test summary: </span></span>
+<span id="cb1-47"><a href="#cb1-47" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-48"><a href="#cb1-48" tabindex="-1"></a><span class="co">#&gt; Linear hypothesis test:</span></span>
+<span id="cb1-49"><a href="#cb1-49" tabindex="-1"></a><span class="co">#&gt; (Intercept) = 0</span></span>
+<span id="cb1-50"><a href="#cb1-50" tabindex="-1"></a><span class="co">#&gt; release_2 = 1</span></span>
+<span id="cb1-51"><a href="#cb1-51" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-52"><a href="#cb1-52" tabindex="-1"></a><span class="co">#&gt; Model 1: restricted model</span></span>
+<span id="cb1-53"><a href="#cb1-53" tabindex="-1"></a><span class="co">#&gt; Model 2: final ~ release_2</span></span>
+<span id="cb1-54"><a href="#cb1-54" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-55"><a href="#cb1-55" tabindex="-1"></a><span class="co">#&gt; Note: Coefficient covariance matrix supplied.</span></span>
+<span id="cb1-56"><a href="#cb1-56" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-57"><a href="#cb1-57" tabindex="-1"></a><span class="co">#&gt;   Res.Df Df     F  Pr(&gt;F)  </span></span>
+<span id="cb1-58"><a href="#cb1-58" tabindex="-1"></a><span class="co">#&gt; 1     70                   </span></span>
+<span id="cb1-59"><a href="#cb1-59" tabindex="-1"></a><span class="co">#&gt; 2     68  2 2.743 0.07151 .</span></span>
+<span id="cb1-60"><a href="#cb1-60" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb1-61"><a href="#cb1-61" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
+<span id="cb1-62"><a href="#cb1-62" tabindex="-1"></a></span>
+<span id="cb1-63"><a href="#cb1-63" tabindex="-1"></a>data_kk <span class="ot">&lt;-</span> efficient_release<span class="sc">$</span>data</span>
+<span id="cb1-64"><a href="#cb1-64" tabindex="-1"></a>e <span class="ot">&lt;-</span> efficient_release<span class="sc">$</span>e</span></code></pre></div>
+<p>The selected value of <code>e</code> tells us how many revision
+rounds are needed before a release is statistically close to the final
+benchmark.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>fit_kk <span class="ot">&lt;-</span> <span class="fu">load_or_build_vignette_result</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  <span class="st">&quot;nowcasting-revisions-kk-fit.rds&quot;</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  <span class="cf">function</span>() {</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>    <span class="fu">kk_nowcast</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>      <span class="at">df =</span> data_kk,</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>      <span class="at">e =</span> e,</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>      <span class="at">model =</span> <span class="st">&quot;KK&quot;</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>      <span class="at">method =</span> <span class="st">&quot;MLE&quot;</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>      <span class="at">solver_options =</span> <span class="fu">list</span>(</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>        <span class="at">method =</span> <span class="st">&quot;L-BFGS-B&quot;</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a>        <span class="at">maxiter =</span> <span class="dv">100</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>        <span class="at">se_method =</span> <span class="st">&quot;hessian&quot;</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>      )</span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>    )</span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>  }</span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a>)</span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="fu">summary</span>(fit_kk)</span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt; === Kishor-Koenig Model ===</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#&gt; Convergence: Success </span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co">#&gt; Log-likelihood: 125.7 </span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co">#&gt; AIC: -231.41 </span></span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co">#&gt; BIC: -198.23 </span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt; Parameter Estimates:</span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#&gt;  Parameter Estimate Std.Error</span></span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co">#&gt;         F0    0.633     0.131</span></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="co">#&gt;       G0_0    0.950     0.031</span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="co">#&gt;       G0_1   -0.037     0.152</span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="co">#&gt;       G0_2   -0.181     0.220</span></span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a><span class="co">#&gt;       G1_0   -0.009     0.011</span></span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="co">#&gt;       G1_1    0.594     0.061</span></span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a><span class="co">#&gt;       G1_2    0.194     0.092</span></span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="co">#&gt;         v0    0.380     0.068</span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co">#&gt;       eps0    0.008     0.001</span></span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="co">#&gt;       eps1    0.001     0.000</span></span></code></pre></div>
+<p>The parameter table reports the estimated transition coefficient
+<span class="math inline">\(F_0\)</span>, the gain-matrix elements <span class="math inline">\(G_{i,j}\)</span>, and the state and observation
+variances.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>fit_kk<span class="sc">$</span>params</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt;    Parameter     Estimate    Std.Error</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; 1         F0  0.632965335 0.1313813639</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; 2       G0_0  0.950076539 0.0308315303</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; 3       G0_1 -0.036660310 0.1517629398</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; 4       G0_2 -0.180790257 0.2201177887</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; 5       G1_0 -0.008913846 0.0109883743</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; 6       G1_1  0.594486360 0.0612313441</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; 7       G1_2  0.194005812 0.0915497686</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; 8         v0  0.379874788 0.0683792923</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; 9       eps0  0.007785910 0.0014196296</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; 10      eps1  0.001397112 0.0002435075</span></span></code></pre></div>
+<p>The <code>states</code> element contains filtered and smoothed
+estimates of the latent state vector in tidy format.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>fit_kk<span class="sc">$</span>states <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(filter <span class="sc">==</span> <span class="st">&quot;smoothed&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">slice_tail</span>(<span class="at">n =</span> <span class="dv">8</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt; # A tibble: 8 × 7</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt;   time       state           estimate lower upper filter   sample   </span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt;   &lt;date&gt;     &lt;chr&gt;              &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;    </span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; 1 2018-04-01 release_2_lag_2    0.654 0.652 0.656 smoothed in_sample</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; 2 2018-07-01 release_2_lag_2    0.370 0.368 0.372 smoothed in_sample</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; 3 2018-10-01 release_2_lag_2    0.414 0.412 0.416 smoothed in_sample</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; 4 2019-01-01 release_2_lag_2    0.136 0.134 0.138 smoothed in_sample</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; 5 2019-04-01 release_2_lag_2    0.307 0.305 0.309 smoothed in_sample</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; 6 2019-07-01 release_2_lag_2    0.441 0.439 0.443 smoothed in_sample</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt; 7 2019-10-01 release_2_lag_2    0.147 0.146 0.149 smoothed in_sample</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; 8 2020-01-01 release_2_lag_2    0.299 0.297 0.301 smoothed in_sample</span></span></code></pre></div>
+<p>The default plot method shows the filtered estimate of the efficient
+release and its confidence interval.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">plot</span>(fit_kk)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="other-kk-family-specifications" class="section level2">
+<h2>Other KK-family specifications</h2>
+<p>The same data can be estimated under the nested Howrey and Classical
+restrictions.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>fit_howrey <span class="ot">&lt;-</span> <span class="fu">kk_nowcast</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="at">df =</span> data_kk,</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="at">e =</span> e,</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="at">model =</span> <span class="st">&quot;Howrey&quot;</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;MLE&quot;</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>)</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>fit_classical <span class="ot">&lt;-</span> <span class="fu">kk_nowcast</span>(</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  <span class="at">df =</span> data_kk,</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>  <span class="at">e =</span> e,</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>  <span class="at">model =</span> <span class="st">&quot;Classical&quot;</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;MLE&quot;</span></span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>)</span></code></pre></div>
+<p>Those alternatives are useful when the unrestricted gain matrix of
+the full KK model is too parameter rich for the available sample.</p>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-durbinTimeSeriesAnalysis2012" class="csl-entry">
+Durbin, James, and Siem Jan Koopman. 2012. <em>Time <span>Series
+Analysis</span> by <span>State Space Methods</span>: <span>Second
+Edition</span></em>. Oxford University Press. <a href="https://doi.org/10.1093/acprof:oso/9780199641178.001.0001">https://doi.org/10.1093/acprof:oso/9780199641178.001.0001</a>.
+</div>
+<div id="ref-howreyUsePreliminaryData1978" class="csl-entry">
+Howrey, E. Philip. 1978. <span>“The <span>Use</span> of
+<span>Preliminary Data</span> in <span>Econometric
+Forecasting</span>.”</span> <em>The Review of Economics and
+Statistics</em> 60 (2): 193. <a href="https://doi.org/10.2307/1924972">https://doi.org/10.2307/1924972</a>.
+</div>
+<div id="ref-strohsalDataRevisionsGerman2020" class="csl-entry">
+Strohsal, Till, and Elias Wolf. 2020. <span>“Data Revisions to
+<span>German</span> National Accounts: <span>Are</span> Initial Releases
+Good Nowcasts?”</span> <em>International Journal of Forecasting</em> 36
+(4): 1252–59. <a href="https://doi.org/10.1016/j.ijforecast.2019.12.006">https://doi.org/10.1016/j.ijforecast.2019.12.006</a>.
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

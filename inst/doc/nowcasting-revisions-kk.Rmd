@@ -1,0 +1,329 @@
+---
+title: "Nowcasting revisions using the generalized Kishor-Koenig family"
+output: rmarkdown::html_vignette
+bibliography: references.bib
+biblio-style: apalike
+link-citations: true
+vignette: >
+  %\VignetteIndexEntry{Nowcasting revisions using the generalized Kishor-Koenig family}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+
+rebuild_vignette_results <- identical(
+  tolower(Sys.getenv("REVISER_REBUILD_VIGNETTE_RESULTS")),
+  "true"
+)
+
+vignette_result_path <- function(name) {
+  candidates <- c(
+    file.path("vignettes", "precomputed", name),
+    file.path("precomputed", name)
+  )
+  existing <- candidates[file.exists(candidates)]
+
+  if (length(existing) > 0) {
+    existing[[1]]
+  } else {
+    candidates[[1]]
+  }
+}
+
+load_or_build_vignette_result <- function(name, builder) {
+  path <- vignette_result_path(name)
+
+  if (!rebuild_vignette_results) {
+    if (!file.exists(path)) {
+      stop("Missing precomputed vignette result: ", basename(path))
+    }
+
+    return(readRDS(path))
+  }
+
+  result <- builder()
+  dir.create(dirname(path), recursive = TRUE, showWarnings = FALSE)
+  saveRDS(result, path)
+  result
+}
+```
+
+This vignette describes the generalized Kishor-Koenig (KK) revision model and
+its nested variants as implemented in `reviser::kk_nowcast()`. The exposition
+uses the same Durbin-Koopman state-space notation that appears throughout the
+package documentation: observation matrices are denoted by \(Z\), transition
+matrices by \(T\), shock-loading matrices by \(R\), and disturbance covariance
+matrices by \(H\) and \(Q\) [@durbinTimeSeriesAnalysis2012].
+
+The motivation is straightforward. Early releases of macroeconomic series are
+often revised several times before they settle near a stable value. Rather than
+ignoring that revision process, the KK family models the vector of releases
+directly and uses the Kalman filter to infer the latent efficient estimate.
+
+## Revision system
+
+Suppose that an efficient estimate becomes available after \(e\) revisions. Let
+\(y_t^j\) denote the \(j\)-th release for reference period \(t\), where
+\(j = 0, \dots, e\). Following @strohsalDataRevisionsGerman2020, stack the
+efficient estimates and the observed real-time releases as
+
+$$
+z_t =
+\begin{bmatrix}
+y_{t-e}^{e} \\
+y_{t-e+1}^{e} \\
+\vdots \\
+y_t^{e}
+\end{bmatrix},
+\qquad
+y_t =
+\begin{bmatrix}
+y_{t-e}^{e} \\
+y_{t-e+1}^{e-1} \\
+\vdots \\
+y_t^{0}
+\end{bmatrix}.
+$$
+
+The generalized KK model is
+
+$$
+z_t = F z_{t-1} + \nu_t,
+\qquad
+\nu_t \sim N(0, V),
+$$
+
+$$
+y_t = (I - G) F y_{t-1} + G z_t + \epsilon_t,
+\qquad
+\epsilon_t \sim N(0, W).
+$$
+
+The companion-form transition matrix is
+
+$$
+F =
+\begin{bmatrix}
+0 & 1 & 0 & \cdots & 0 \\
+0 & 0 & 1 & \cdots & 0 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+0 & 0 & 0 & \cdots & 1 \\
+0 & 0 & 0 & \cdots & F_0
+\end{bmatrix},
+$$
+
+and the gain matrix is
+
+$$
+G =
+\begin{bmatrix}
+1 & 0 & \cdots & 0 \\
+G_{e-1,e} & G_{e-1,e-1} & \cdots & G_{e-1,0} \\
+G_{e-2,e} & G_{e-2,e-1} & \cdots & G_{e-2,0} \\
+\vdots & \vdots & \ddots & \vdots \\
+G_{0,e} & G_{0,e-1} & \cdots & G_{0,0}
+\end{bmatrix}.
+$$
+
+Intuitively, \(F\) governs the dynamics of the efficient estimate, while \(G\)
+controls how quickly incoming releases absorb new information. The covariance
+matrices \(V\) and \(W\) describe uncertainty in the latent efficient estimate
+and the published releases, respectively.
+
+## Nested models
+
+The generalized KK setup nests two useful special cases.
+
+- The **Classical measurement-error model** is obtained by setting
+  \(G = I\). In that case, published data are noisy measurements of the latent
+  efficient estimate, with no revision persistence beyond the state dynamics.
+- The **Howrey model** [@howreyUsePreliminaryData1978] allows revision
+  persistence but restricts the gain matrix by imposing
+  \(G_{e-i,0} = 0\) for \(i = 1, \dots, e-1\) and \(G_{0,0} = 1\).
+
+The `model` argument in `kk_nowcast()` selects among these specifications:
+`"KK"`, `"Howrey"`, and `"Classical"`.
+
+## Durbin-Koopman state-space form
+
+To run filtering and smoothing, `reviser` casts the KK system into the standard
+time-invariant state-space form
+
+$$
+y_t = Z \alpha_t + \varepsilon_t,
+\qquad
+\varepsilon_t \sim N(0, H),
+$$
+
+$$
+\alpha_{t+1} = T \alpha_t + R \eta_t,
+\qquad
+\eta_t \sim N(0, Q).
+$$
+
+Define the augmented state as
+
+$$
+\alpha_t =
+\begin{bmatrix}
+z_t \\
+r_t
+\end{bmatrix},
+\qquad
+r_t = y_t - z_t.
+$$
+
+With this choice of state vector, the implementation in `kk_to_ss()` uses
+
+$$
+Z = \begin{bmatrix} I & I \end{bmatrix},
+\qquad
+T =
+\begin{bmatrix}
+F & 0 \\
+0 & (I - G) F
+\end{bmatrix},
+\qquad
+R = I.
+$$
+
+The observation disturbance is set to zero, so \(H = 0\). All uncertainty is
+collected in the state disturbance covariance matrix
+
+$$
+Q =
+\begin{bmatrix}
+V & -V (I - G)' \\
+-(I - G) V & W + (I - G) V (I - G)'
+\end{bmatrix}.
+$$
+
+This is exactly the Durbin-Koopman representation used internally by
+`reviser`: the Kalman filter and smoother operate on \((Z, T, R, H, Q)\), while
+the KK-specific parameters \((F, G, V, W)\) remain the economically
+interpretable layer.
+
+## Estimation in `reviser`
+
+`kk_nowcast()` supports three estimators.
+
+- `method = "SUR"` estimates the original revision equations jointly by
+  seemingly unrelated regression using `systemfit::nlsystemfit()`.
+- `method = "OLS"` estimates the equations one by one. This is fast, but the
+  cross-equation restrictions are not fully efficient.
+- `method = "MLE"` estimates the state-space model by maximum likelihood using
+  the Kalman filter.
+
+For applied work, the MLE route is usually the most flexible because it supports
+information criteria, Hessian- or QML-based standard errors, and filtered or
+smoothed states directly from the state-space model.
+
+## Example: Euro Area GDP revisions
+
+We illustrate the workflow with Euro Area GDP growth from `reviser::gdp`. We
+first identify an efficient release among the first 15 vintages, then estimate
+the full KK model.
+
+```{r warning = FALSE, message = FALSE}
+library(reviser)
+library(dplyr)
+library(tidyr)
+library(tsbox)
+
+gdp <- reviser::gdp |>
+  tsbox::ts_pc() |>
+  dplyr::filter(
+    id == "EA",
+    time >= min(pub_date),
+    time <= as.Date("2020-01-01")
+  ) |>
+  tidyr::drop_na()
+
+df <- get_nth_release(gdp, n = 0:14)
+final_release <- get_nth_release(gdp, n = 15)
+
+efficient_release <- load_or_build_vignette_result(
+  "nowcasting-revisions-kk-efficient-release.rds",
+  function() get_first_efficient_release(df, final_release)
+)
+summary(efficient_release)
+
+data_kk <- efficient_release$data
+e <- efficient_release$e
+```
+
+The selected value of `e` tells us how many revision rounds are needed before a
+release is statistically close to the final benchmark.
+
+```{r warning = FALSE, message = FALSE}
+fit_kk <- load_or_build_vignette_result(
+  "nowcasting-revisions-kk-fit.rds",
+  function() {
+    kk_nowcast(
+      df = data_kk,
+      e = e,
+      model = "KK",
+      method = "MLE",
+      solver_options = list(
+        method = "L-BFGS-B",
+        maxiter = 100,
+        se_method = "hessian"
+      )
+    )
+  }
+)
+
+summary(fit_kk)
+```
+
+The parameter table reports the estimated transition coefficient \(F_0\), the
+gain-matrix elements \(G_{i,j}\), and the state and observation variances.
+
+```{r warning = FALSE, message = FALSE}
+fit_kk$params
+```
+
+The `states` element contains filtered and smoothed estimates of the latent
+state vector in tidy format.
+
+```{r warning = FALSE, message = FALSE}
+fit_kk$states |>
+  dplyr::filter(filter == "smoothed") |>
+  dplyr::slice_tail(n = 8)
+```
+
+The default plot method shows the filtered estimate of the efficient release and
+its confidence interval.
+
+```{r warning = FALSE, message = FALSE}
+plot(fit_kk)
+```
+
+## Other KK-family specifications
+
+The same data can be estimated under the nested Howrey and Classical
+restrictions.
+
+```{r eval = FALSE}
+fit_howrey <- kk_nowcast(
+  df = data_kk,
+  e = e,
+  model = "Howrey",
+  method = "MLE"
+)
+
+fit_classical <- kk_nowcast(
+  df = data_kk,
+  e = e,
+  model = "Classical",
+  method = "MLE"
+)
+```
+
+Those alternatives are useful when the unrestricted gain matrix of the full KK
+model is too parameter rich for the available sample.
