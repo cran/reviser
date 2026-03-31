@@ -8,15 +8,19 @@
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![R-CMD-check](https://github.com/p-wegmueller/reviser/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/p-wegmueller/reviser/actions/workflows/R-CMD-check.yaml)
-[![lint](https://github.com/p-wegmueller/reviser/actions/workflows/lint.yaml/badge.svg)](https://github.com/p-wegmueller/reviser/actions/workflows/lint.yaml)
-[![pkgcheck](https://github.com/p-wegmueller/reviser/workflows/pkgcheck/badge.svg)](https://github.com/p-wegmueller/reviser/actions?query=workflow%3Apkgcheck)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/reviser)](https://CRAN.R-project.org/package=reviser)
+[![CRAN RStudio mirror
+downloads](https://cranlogs.r-pkg.org/badges/grand-total/reviser)](https://r-pkg.org/pkg/reviser)
+[![R-CMD-check](https://github.com/ropensci/reviser/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci/reviser/actions/workflows/R-CMD-check.yaml)
+[![lint](https://github.com/ropensci/reviser/actions/workflows/lint.yaml/badge.svg)](https://github.com/ropensci/reviser/actions/workflows/lint.yaml)
+[![pkgcheck](https://github.com/ropensci/reviser/workflows/pkgcheck/badge.svg)](https://github.com/ropensci/reviser/actions?query=workflow%3Apkgcheck)
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![reviser status
-badge](https://marcburri.r-universe.dev/badges/reviser)](https://marcburri.r-universe.dev/reviser)
+badge](https://ropensci.r-universe.dev/badges/reviser)](https://ropensci.r-universe.dev/reviser)
 [![Codecov test
-coverage](https://codecov.io/gh/p-wegmueller/reviser/graph/badge.svg)](https://app.codecov.io/gh/p-wegmueller/reviser)
+coverage](https://codecov.io/gh/ropensci/reviser/graph/badge.svg)](https://app.codecov.io/gh/ropensci/reviser)
 <!-- badges: end -->
 
 **reviser** is an R package designed for working with time-series
@@ -28,7 +32,7 @@ analyze time-series revisions.
 Economic data often arrives in multiple waves—with initial estimates
 updated or revised as more complete information becomes available (See
 the vignette [**the role and importance of
-revisions**](https://p-wegmueller.github.io/reviser/articles/literature-review.html)).
+revisions**](https://docs.ropensci.org/reviser/articles/literature-review.html)).
 These revisions, while common, can have major implications for how
 economic conditions are perceived and how decisions are made by
 policymakers, analysts, and markets. Yet, tools to systematically
@@ -87,48 +91,62 @@ Get started:
 
 - Structure your data according to **reviser conventions**. See the
   [*get
-  started*](https://p-wegmueller.github.io/reviser/articles/reviser.html)
+  started*](https://docs.ropensci.org/reviser/articles/reviser.html)
   vignette
 
 Key features include:
 
 - **Calculate revisions** across vintages using
-  [`get_revisions()`](https://p-wegmueller.github.io/reviser/reference/get_revisions.html).
+  [`get_revisions()`](https://docs.ropensci.org/reviser/reference/get_revisions.html).
   See the vignette [*Understanding Data
-  Revisions*](https://p-wegmueller.github.io/reviser/articles/understanding-revisions.html)
+  Revisions*](https://docs.ropensci.org/reviser/articles/understanding-revisions.html)
   to learn how to structure and compute revision tables.
 
 - **Analyze revision patterns** and evaluate revision accuracy and bias
   using
-  [`get_revision_analysis()`](https://p-wegmueller.github.io/reviser/reference/get_revision_analysis.html).
+  [`get_revision_analysis()`](https://docs.ropensci.org/reviser/reference/get_revision_analysis.html).
   For more, read the vignette [*Revision Patterns and
-  Statistics*](https://p-wegmueller.github.io/reviser/articles/revision-analysis.html).
+  Statistics*](https://docs.ropensci.org/reviser/articles/revision-analysis.html).
 
 - **Detect the first efficient release**, i.e., the earliest vintage
   that closely matches the final values, with
-  [`get_first_efficient_release()`](https://p-wegmueller.github.io/reviser/reference/get_first_efficient_release.html).
+  [`get_first_efficient_release()`](https://docs.ropensci.org/reviser/reference/get_first_efficient_release.html).
   See the vignette [*Efficient Release
-  Identification*](https://p-wegmueller.github.io/reviser/articles/efficient-release.html).
+  Identification*](https://docs.ropensci.org/reviser/articles/efficient-release.html).
 
 - **Nowcast future data revisions** using
-  [`kk_nowcast()`](https://p-wegmueller.github.io/reviser/reference/kk_nowcast.html)
+  [`kk_nowcast()`](https://docs.ropensci.org/reviser/reference/kk_nowcast.html)
   and
-  [`jvn_nowcast()`](https://p-wegmueller.github.io/reviser/reference/jvn_nowcast.html),
+  [`jvn_nowcast()`](https://docs.ropensci.org/reviser/reference/jvn_nowcast.html),
   tools to anticipate upcoming changes to early releases. Explore the
-  methodology in the vignettes [*Nowcasting revisions using the generalized
-  Kishor-Koenig
-  family*](https://p-wegmueller.github.io/reviser/articles/nowcasting-revisions-kk.html)
+  methodology in the vignettes [*Nowcasting revisions using the
+  generalized Kishor-Koenig
+  family*](https://docs.ropensci.org/reviser/articles/nowcasting-revisions-kk.html)
   and [*Nowcasting revisions using the Jacobs-Van Norden
-  model*](https://p-wegmueller.github.io/reviser/articles/nowcasting-revisions-jvn.html).
+  model*](https://docs.ropensci.org/reviser/articles/nowcasting-revisions-jvn.html).
 
 ## Installation
 
-You can install the development version of reviser from
+Install the released version from CRAN with:
+
+``` r
+install.packages("reviser")
+```
+
+You can also install the rOpenSci build from R-universe with:
+
+``` r
+install.packages(
+  "reviser",
+  repos = c("https://ropensci.r-universe.dev", "https://cloud.r-project.org")
+)
+```
+
+You can install the development version from
 [GitHub](https://github.com/) with:
 
 ``` r
-# Install the reviser package
-remotes::install_github("p-wegmueller/reviser")
+remotes::install_github("ropensci/reviser")
 ```
 
 ## Usage
@@ -163,7 +181,7 @@ plot_vintages(
   subtitle = "qoq growth rates")
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" alt="" width="100%" />
+<img src="man/figures/README-readme-example-1.png" alt="" width="100%" />
 
 ``` r
 
@@ -277,15 +295,14 @@ wrangling, visualization, and evaluation of release efficiency.
 Contributions are encouraged and appreciated. If you’re uncertain about
 opening a pull request, consider starting with an issue to discuss your
 proposal. For more information, please refer to
-[CONTRIBUTING](https://p-wegmueller.github.io/reviser/CONTRIBUTING.html).
+[CONTRIBUTING](https://docs.ropensci.org/reviser/CONTRIBUTING.html).
 
-Please note that the reviser project is released with a [Contributor
-Code of
-Conduct](https://p-wegmueller.github.io/reviser/CODE_OF_CONDUCT.html).
+Please note that the reviser project follows the [rOpenSci Code of
+Conduct](https://devguide.ropensci.org/collaboration.html#code-of-conduct).
 By contributing to this project, you agree to abide by its terms.
 
 ## Citation
 
 Burri M, Wegmueller P (2025). reviser: Tools for Studying Revision
-Properties in Real-Time Time Series Vintages. R package version 0.1.0,
-<https://p-wegmueller.github.io/reviser/>.
+Properties in Real-Time Time Series Vintages. R package version 0.1.1,
+<https://docs.ropensci.org/reviser/>.
