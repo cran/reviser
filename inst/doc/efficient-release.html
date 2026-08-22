@@ -149,7 +149,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 div.csl-bib-body { }
 div.csl-entry {
 clear: both;
-margin-bottom: 0em;
 }
 .hanging div.csl-entry {
 margin-left:2em;
@@ -540,27 +539,28 @@ non-trivial efficient-release result.</p>
 <span id="cb1-44"><a href="#cb1-44" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb1-45"><a href="#cb1-45" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb1-46"><a href="#cb1-46" tabindex="-1"></a><span class="co">#&gt; Test summary: </span></span>
-<span id="cb1-47"><a href="#cb1-47" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-48"><a href="#cb1-48" tabindex="-1"></a><span class="co">#&gt; Linear hypothesis test:</span></span>
-<span id="cb1-49"><a href="#cb1-49" tabindex="-1"></a><span class="co">#&gt; (Intercept) = 0</span></span>
-<span id="cb1-50"><a href="#cb1-50" tabindex="-1"></a><span class="co">#&gt; release_2 = 1</span></span>
-<span id="cb1-51"><a href="#cb1-51" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-52"><a href="#cb1-52" tabindex="-1"></a><span class="co">#&gt; Model 1: restricted model</span></span>
-<span id="cb1-53"><a href="#cb1-53" tabindex="-1"></a><span class="co">#&gt; Model 2: final ~ release_2</span></span>
-<span id="cb1-54"><a href="#cb1-54" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-55"><a href="#cb1-55" tabindex="-1"></a><span class="co">#&gt; Note: Coefficient covariance matrix supplied.</span></span>
-<span id="cb1-56"><a href="#cb1-56" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-57"><a href="#cb1-57" tabindex="-1"></a><span class="co">#&gt;   Res.Df Df     F  Pr(&gt;F)  </span></span>
-<span id="cb1-58"><a href="#cb1-58" tabindex="-1"></a><span class="co">#&gt; 1     70                   </span></span>
-<span id="cb1-59"><a href="#cb1-59" tabindex="-1"></a><span class="co">#&gt; 2     68  2 2.743 0.07151 .</span></span>
-<span id="cb1-60"><a href="#cb1-60" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
-<span id="cb1-61"><a href="#cb1-61" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span>
-<span id="cb1-62"><a href="#cb1-62" tabindex="-1"></a></span>
-<span id="cb1-63"><a href="#cb1-63" tabindex="-1"></a><span class="fu">head</span>(res)</span>
-<span id="cb1-64"><a href="#cb1-64" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 5</span></span>
-<span id="cb1-65"><a href="#cb1-65" tabindex="-1"></a><span class="co">#&gt;       e  alpha  beta p_value n_tested</span></span>
-<span id="cb1-66"><a href="#cb1-66" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;    &lt;int&gt;</span></span>
-<span id="cb1-67"><a href="#cb1-67" tabindex="-1"></a><span class="co">#&gt; 1     2 0.0328  1.01  0.0715        3</span></span></code></pre></div>
+<span id="cb1-47"><a href="#cb1-47" tabindex="-1"></a><span class="co">#&gt; Linear hypothesis test</span></span>
+<span id="cb1-48"><a href="#cb1-48" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-49"><a href="#cb1-49" tabindex="-1"></a><span class="co">#&gt; Hypothesis:</span></span>
+<span id="cb1-50"><a href="#cb1-50" tabindex="-1"></a><span class="co">#&gt; (Intercept) = 0</span></span>
+<span id="cb1-51"><a href="#cb1-51" tabindex="-1"></a><span class="co">#&gt; release_2 = 1</span></span>
+<span id="cb1-52"><a href="#cb1-52" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-53"><a href="#cb1-53" tabindex="-1"></a><span class="co">#&gt; Model 1: restricted model</span></span>
+<span id="cb1-54"><a href="#cb1-54" tabindex="-1"></a><span class="co">#&gt; Model 2: final ~ release_2</span></span>
+<span id="cb1-55"><a href="#cb1-55" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-56"><a href="#cb1-56" tabindex="-1"></a><span class="co">#&gt; Note: Coefficient covariance matrix supplied.</span></span>
+<span id="cb1-57"><a href="#cb1-57" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb1-58"><a href="#cb1-58" tabindex="-1"></a><span class="co">#&gt;   Res.Df Df     F  Pr(&gt;F)  </span></span>
+<span id="cb1-59"><a href="#cb1-59" tabindex="-1"></a><span class="co">#&gt; 1     70                   </span></span>
+<span id="cb1-60"><a href="#cb1-60" tabindex="-1"></a><span class="co">#&gt; 2     68  2 2.743 0.07151 .</span></span>
+<span id="cb1-61"><a href="#cb1-61" tabindex="-1"></a><span class="co">#&gt; ---</span></span>
+<span id="cb1-62"><a href="#cb1-62" tabindex="-1"></a><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">head</span>(res)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; # A tibble: 1 × 5</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt;       e  alpha  beta p_value n_tested</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;    &lt;int&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt; 1     2 0.0328  1.01  0.0715        3</span></span></code></pre></div>
 <p>Note: The identification of the first efficient release is related to
 the news hypothesis testing. Hence, the same conclusion could be reached
 by using the function <code>get_revision_analysis()</code> (setting
@@ -572,61 +572,61 @@ the data to be subsequently used in <code>kk_nowcast()</code> and
 (See vignettes <a href="nowcasting-revisions-kk.html">Nowcasting
 revisions using the generalized Kishor-Koenig family</a> and <a href="nowcasting-revisions-jvn.html">Nowcasting revisions using the
 Jacobs-Van Norden model</a> for more details).</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>analysis <span class="ot">&lt;-</span> <span class="fu">get_revision_analysis</span>(</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  df,</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  final_release,</span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="at">degree =</span> <span class="dv">3</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>)</span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="fu">head</span>(analysis)</span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; === Revision Analysis Summary ===</span></span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 17</span></span>
-<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt;   id    release        N `News test Intercept` `News test Intercept (std.err)`</span></span>
-<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt;                 &lt;dbl&gt;                           &lt;dbl&gt;</span></span>
-<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; 1 EA    release_0     70                 0.043                           0.03 </span></span>
-<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt; 2 EA    release_1     70                 0.041                           0.024</span></span>
-<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; 3 EA    release_10    70                 0                               0.008</span></span>
-<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt; 4 EA    release_11    70                -0.003                           0.006</span></span>
-<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; 5 EA    release_12    70                -0.004                           0.007</span></span>
-<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt; 6 EA    release_13    70                 0.002                           0.005</span></span>
-<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt; # ℹ 12 more variables: `News test Intercept (p-value)` &lt;dbl&gt;,</span></span>
-<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt; #   `News test Coefficient` &lt;dbl&gt;, `News test Coefficient (std.err)` &lt;dbl&gt;,</span></span>
-<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt; #   `News test Coefficient (p-value)` &lt;dbl&gt;, `News joint test (p-value)` &lt;dbl&gt;,</span></span>
-<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#&gt; #   `Noise test Intercept` &lt;dbl&gt;, `Noise test Intercept (std.err)` &lt;dbl&gt;,</span></span>
-<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co">#&gt; #   `Noise test Intercept (p-value)` &lt;dbl&gt;, `Noise test Coefficient` &lt;dbl&gt;,</span></span>
-<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co">#&gt; #   `Noise test Coefficient (std.err)` &lt;dbl&gt;,</span></span>
-<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co">#&gt; #   `Noise test Coefficient (p-value)` &lt;dbl&gt;, …</span></span>
-<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt; === Interpretation ===</span></span>
-<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_0:</span></span>
-<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="co">#&gt;   • Revisions contain NEWS (p = 0.044 ): systematic information</span></span>
-<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="co">#&gt;   • Revisions contain NOISE (p = 0.001 ): measurement error</span></span>
-<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_1:</span></span>
-<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="co">#&gt;   • Revisions contain NEWS (p = 0.042 ): systematic information</span></span>
-<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a><span class="co">#&gt;   • Revisions contain NOISE (p = 0.007 ): measurement error</span></span>
-<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_10:</span></span>
-<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain news (p = 0.124 )</span></span>
-<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a><span class="co">#&gt;   • Revisions contain NOISE (p = 0.019 ): measurement error</span></span>
-<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_11:</span></span>
-<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain news (p = 0.524 )</span></span>
-<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain noise (p = 0.132 )</span></span>
-<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_12:</span></span>
-<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain news (p = 0.628 )</span></span>
-<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain noise (p = 0.402 )</span></span>
-<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_13:</span></span>
-<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain news (p = 0.553 )</span></span>
-<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain noise (p = 0.378 )</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>analysis <span class="ot">&lt;-</span> <span class="fu">get_revision_analysis</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  df,</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  final_release,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="at">degree =</span> <span class="dv">3</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>)</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="fu">head</span>(analysis)</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; === Revision Analysis Summary ===</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 17</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt;   id    release        N `News test Intercept` `News test Intercept (std.err)`</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt;                 &lt;dbl&gt;                           &lt;dbl&gt;</span></span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; 1 EA    release_0     70                 0.043                           0.03 </span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; 2 EA    release_1     70                 0.041                           0.024</span></span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; 3 EA    release_10    70                 0                               0.008</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; 4 EA    release_11    70                -0.003                           0.006</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; 5 EA    release_12    70                -0.004                           0.007</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; 6 EA    release_13    70                 0.002                           0.005</span></span>
+<span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; # ℹ 12 more variables: `News test Intercept (p-value)` &lt;dbl&gt;,</span></span>
+<span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; #   `News test Coefficient` &lt;dbl&gt;, `News test Coefficient (std.err)` &lt;dbl&gt;,</span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; #   `News test Coefficient (p-value)` &lt;dbl&gt;, `News joint test (p-value)` &lt;dbl&gt;,</span></span>
+<span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt; #   `Noise test Intercept` &lt;dbl&gt;, `Noise test Intercept (std.err)` &lt;dbl&gt;,</span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; #   `Noise test Intercept (p-value)` &lt;dbl&gt;, `Noise test Coefficient` &lt;dbl&gt;,</span></span>
+<span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt; #   `Noise test Coefficient (std.err)` &lt;dbl&gt;,</span></span>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt; #   `Noise test Coefficient (p-value)` &lt;dbl&gt;, …</span></span>
+<span id="cb3-26"><a href="#cb3-26" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-27"><a href="#cb3-27" tabindex="-1"></a><span class="co">#&gt; === Interpretation ===</span></span>
+<span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_0:</span></span>
+<span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co">#&gt;   • Revisions contain NEWS (p = 0.044 ): systematic information</span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co">#&gt;   • Revisions contain NOISE (p = 0.001 ): measurement error</span></span>
+<span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_1:</span></span>
+<span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a><span class="co">#&gt;   • Revisions contain NEWS (p = 0.042 ): systematic information</span></span>
+<span id="cb3-35"><a href="#cb3-35" tabindex="-1"></a><span class="co">#&gt;   • Revisions contain NOISE (p = 0.007 ): measurement error</span></span>
+<span id="cb3-36"><a href="#cb3-36" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-37"><a href="#cb3-37" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_10:</span></span>
+<span id="cb3-38"><a href="#cb3-38" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain news (p = 0.124 )</span></span>
+<span id="cb3-39"><a href="#cb3-39" tabindex="-1"></a><span class="co">#&gt;   • Revisions contain NOISE (p = 0.019 ): measurement error</span></span>
+<span id="cb3-40"><a href="#cb3-40" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-41"><a href="#cb3-41" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_11:</span></span>
+<span id="cb3-42"><a href="#cb3-42" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain news (p = 0.524 )</span></span>
+<span id="cb3-43"><a href="#cb3-43" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain noise (p = 0.132 )</span></span>
+<span id="cb3-44"><a href="#cb3-44" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-45"><a href="#cb3-45" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_12:</span></span>
+<span id="cb3-46"><a href="#cb3-46" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain news (p = 0.628 )</span></span>
+<span id="cb3-47"><a href="#cb3-47" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain noise (p = 0.402 )</span></span>
+<span id="cb3-48"><a href="#cb3-48" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-49"><a href="#cb3-49" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_13:</span></span>
+<span id="cb3-50"><a href="#cb3-50" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain news (p = 0.553 )</span></span>
+<span id="cb3-51"><a href="#cb3-51" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain noise (p = 0.378 )</span></span></code></pre></div>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="unnumbered">References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-aruobaDataRevisionsAre2008" class="csl-entry">
 Aruoba, S. Borağan. 2008. <span>“Data <span>Revisions Are Not Well
 Behaved</span>.”</span> <em>Journal of Money, Credit and Banking</em> 40

@@ -99,17 +99,17 @@ fit_kk$states |>
 plot(fit_kk)
 
 ## ----eval = FALSE-------------------------------------------------------------
-# fit_howrey <- kk_nowcast(
-#   df = data_kk,
-#   e = e,
-#   model = "Howrey",
-#   method = "MLE"
-# )
-# 
-# fit_classical <- kk_nowcast(
-#   df = data_kk,
-#   e = e,
-#   model = "Classical",
-#   method = "MLE"
-# )
+#  fit_howrey <- kk_nowcast(
+#    df = data_kk,
+#    e = e,
+#    model = "Howrey",
+#    method = "MLE"
+#  )
+#  
+#  fit_classical <- kk_nowcast(
+#    df = data_kk,
+#    e = e,
+#    model = "Classical",
+#    method = "MLE"
+#  )
 

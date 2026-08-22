@@ -116,21 +116,21 @@ fit_jvn$states |>
   theme_minimal()
 
 ## ----eval = FALSE-------------------------------------------------------------
-# fit_news <- jvn_nowcast(
-#   df = df,
-#   e = 4,
-#   ar_order = 2,
-#   include_news = TRUE,
-#   include_noise = FALSE,
-#   include_spillovers = FALSE
-# )
-# 
-# fit_noise <- jvn_nowcast(
-#   df = df,
-#   e = 4,
-#   ar_order = 2,
-#   include_news = FALSE,
-#   include_noise = TRUE,
-#   include_spillovers = FALSE
-# )
+#  fit_news <- jvn_nowcast(
+#    df = df,
+#    e = 4,
+#    ar_order = 2,
+#    include_news = TRUE,
+#    include_noise = FALSE,
+#    include_spillovers = FALSE
+#  )
+#  
+#  fit_noise <- jvn_nowcast(
+#    df = df,
+#    e = 4,
+#    ar_order = 2,
+#    include_news = FALSE,
+#    include_noise = TRUE,
+#    include_spillovers = FALSE
+#  )
 

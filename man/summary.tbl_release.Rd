@@ -34,6 +34,7 @@ Other helpers:
 \code{\link{summary.tbl_pubdate}()},
 \code{\link{tbl_sum.tbl_pubdate}()},
 \code{\link{tbl_sum.tbl_release}()},
+\code{\link{validate_vintages}()},
 \code{\link{vintages_long}()},
 \code{\link{vintages_wide}()}
 }

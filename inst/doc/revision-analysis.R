@@ -66,24 +66,24 @@ results <- get_revision_analysis(
 results
 
 ## ----warning=FALSE, eval=FALSE------------------------------------------------
-# # Get unique sorted publication dates
-# pub_dates <- gdp |>
-#   distinct(pub_date) |>
-#   arrange(pub_date) |>
-#   pull(pub_date)
-# 
-# # Run the function for each pair of consecutive publication dates
-# results <- purrr::map_dfr(seq_along(pub_dates[-length(pub_dates)]),
-#   function(i) {
-#     df <- gdp |>
-#       filter(pub_date %in% pub_dates[i])
-# 
-#     final_release <- gdp |>
-#       filter(pub_date %in% pub_dates[i + 1])
-# 
-#     get_revision_analysis(df, final_release, degree = 5)
-#   }
-# )
-# 
-# head(results)
+#  # Get unique sorted publication dates
+#  pub_dates <- gdp |>
+#    distinct(pub_date) |>
+#    arrange(pub_date) |>
+#    pull(pub_date)
+#  
+#  # Run the function for each pair of consecutive publication dates
+#  results <- purrr::map_dfr(seq_along(pub_dates[-length(pub_dates)]),
+#    function(i) {
+#      df <- gdp |>
+#        filter(pub_date %in% pub_dates[i])
+#  
+#      final_release <- gdp |>
+#        filter(pub_date %in% pub_dates[i + 1])
+#  
+#      get_revision_analysis(df, final_release, degree = 5)
+#    }
+#  )
+#  
+#  head(results)
 
