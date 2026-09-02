@@ -87,25 +87,24 @@ fit_jvn <- load_or_build_vignette_result(
 summary(fit_jvn)
 
 ## ----warning = FALSE, message = FALSE-----------------------------------------
-fit_jvn$params
+coef(fit_jvn)
 
 ## ----warning = FALSE, message = FALSE-----------------------------------------
-fit_jvn$states |>
-  dplyr::filter(
-    state == "true_lag_0",
-    filter == "smoothed"
-  ) |>
+logLik(fit_jvn)
+AIC(fit_jvn)
+BIC(fit_jvn)
+nobs(fit_jvn)
+
+## ----warning = FALSE, message = FALSE-----------------------------------------
+states(fit_jvn, filter = "smoothed", state = "true_lag_0") |>
   dplyr::slice_tail(n = 8)
 
 ## ----warning = FALSE, message = FALSE-----------------------------------------
 plot(fit_jvn)
 
 ## ----warning = FALSE, message = FALSE-----------------------------------------
-fit_jvn$states |>
-  dplyr::filter(
-    filter == "smoothed",
-    grepl("news|noise", state)
-  ) |>
+states(fit_jvn, filter = "smoothed") |>
+  dplyr::filter(grepl("news|noise", state)) |>
   ggplot(aes(x = time, y = estimate, color = state)) +
   geom_line() +
   labs(

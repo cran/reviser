@@ -1,12 +1,12 @@
 Package: reviser
 Type: Package
 Title: Analyzing Revisions in Real-Time Time Series Vintages
-Version: 0.2.0
+Version: 0.3.0
 Authors@R: c(
     person(given = "Marc", family = "Burri", email = "marc.burri91@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0001-8974-9090")),
     person(given = "Philipp", family = "Wegmueller",
-        email = "philipp.wemueller@seco.admin.ch", role = c("aut", "cph"))
+        email = "philipp.wegmueller@seco.admin.ch", role = c("aut", "cph"))
   )
 Description: Analyzes revisions in real-time time series vintages. The
     package converts between wide revision triangles and tidy long
@@ -33,10 +33,10 @@ URL: https://docs.ropensci.org/reviser/,
         https://github.com/ropensci/reviser
 BugReports: https://github.com/ropensci/reviser/issues
 NeedsCompilation: no
-Packaged: 2026-08-22 17:42:33 UTC; marcburri
+Packaged: 2026-09-02 08:05:16 UTC; marcburri
 Author: Marc Burri [aut, cre, cph] (ORCID:
     <https://orcid.org/0000-0001-8974-9090>),
   Philipp Wegmueller [aut, cph]
 Maintainer: Marc Burri <marc.burri91@gmail.com>
 Repository: CRAN
-Date/Publication: 2026-08-22 18:30:02 UTC
+Date/Publication: 2026-09-02 08:30:02 UTC

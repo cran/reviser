@@ -620,8 +620,7 @@ predictability, and potential biases in data revisions.</p>
 <span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co">#&gt; id=EA, release=release_1:</span></span>
 <span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co">#&gt;   • Significant negative correlation between revisions and initial values (ρ = -0.318 , p = 0 )</span></span>
-<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt;   • Significant autocorrelation in revisions</span></span>
-<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#&gt;               (ρ₁ = -0.157 ): revisions are persistent</span></span></code></pre></div>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt;   • Significant autocorrelation in revisions  (ρ₁ = -0.157 ): revisions are persistent</span></span></code></pre></div>
 </div>
 </div>
 <div id="sign-switches" class="section level3">
@@ -943,18 +942,17 @@ Alternatively, it can be specified via the optional function argument
 <span id="cb5-32"><a href="#cb5-32" tabindex="-1"></a><span class="co">#&gt;   • Very low revision volatility (Noise/Signal = 0.045 )</span></span>
 <span id="cb5-33"><a href="#cb5-33" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain news (p = 0.237 )</span></span>
 <span id="cb5-34"><a href="#cb5-34" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain noise (p = 0.069 )</span></span>
-<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a><span class="co">#&gt;   • Significant autocorrelation in revisions</span></span>
-<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a><span class="co">#&gt;               (ρ₁ = -0.201 ): revisions are persistent</span></span>
-<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a><span class="co">#&gt;   • Good forecast accuracy (Theil&#39;s U1 = 0.022 )</span></span>
-<span id="cb5-38"><a href="#cb5-38" tabindex="-1"></a><span class="co">#&gt;   • Excellent sign prediction (97.2% correct)</span></span>
-<span id="cb5-39"><a href="#cb5-39" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb5-40"><a href="#cb5-40" tabindex="-1"></a><span class="co">#&gt; id=EA, pub_date=2024-07-01:</span></span>
-<span id="cb5-41"><a href="#cb5-41" tabindex="-1"></a><span class="co">#&gt;   • No significant bias detected (p = 0.375 )</span></span>
-<span id="cb5-42"><a href="#cb5-42" tabindex="-1"></a><span class="co">#&gt;   • Very low revision volatility (Noise/Signal = 0.031 )</span></span>
-<span id="cb5-43"><a href="#cb5-43" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain news (p = 0.579 )</span></span>
-<span id="cb5-44"><a href="#cb5-44" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain noise (p = 0.279 )</span></span>
-<span id="cb5-45"><a href="#cb5-45" tabindex="-1"></a><span class="co">#&gt;   • Good forecast accuracy (Theil&#39;s U1 = 0.015 )</span></span>
-<span id="cb5-46"><a href="#cb5-46" tabindex="-1"></a><span class="co">#&gt;   • Excellent sign prediction (98.9% correct)</span></span></code></pre></div>
+<span id="cb5-35"><a href="#cb5-35" tabindex="-1"></a><span class="co">#&gt;   • Significant autocorrelation in revisions  (ρ₁ = -0.201 ): revisions are persistent</span></span>
+<span id="cb5-36"><a href="#cb5-36" tabindex="-1"></a><span class="co">#&gt;   • Good forecast accuracy (Theil&#39;s U1 = 0.022 )</span></span>
+<span id="cb5-37"><a href="#cb5-37" tabindex="-1"></a><span class="co">#&gt;   • Excellent sign prediction (97.2% correct)</span></span>
+<span id="cb5-38"><a href="#cb5-38" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-39"><a href="#cb5-39" tabindex="-1"></a><span class="co">#&gt; id=EA, pub_date=2024-07-01:</span></span>
+<span id="cb5-40"><a href="#cb5-40" tabindex="-1"></a><span class="co">#&gt;   • No significant bias detected (p = 0.375 )</span></span>
+<span id="cb5-41"><a href="#cb5-41" tabindex="-1"></a><span class="co">#&gt;   • Very low revision volatility (Noise/Signal = 0.031 )</span></span>
+<span id="cb5-42"><a href="#cb5-42" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain news (p = 0.579 )</span></span>
+<span id="cb5-43"><a href="#cb5-43" tabindex="-1"></a><span class="co">#&gt;   • Revisions do NOT contain noise (p = 0.279 )</span></span>
+<span id="cb5-44"><a href="#cb5-44" tabindex="-1"></a><span class="co">#&gt;   • Good forecast accuracy (Theil&#39;s U1 = 0.015 )</span></span>
+<span id="cb5-45"><a href="#cb5-45" tabindex="-1"></a><span class="co">#&gt;   • Excellent sign prediction (98.9% correct)</span></span></code></pre></div>
 <p>The <code>get_revision_analysis()</code> function requires a single
 time series in <code>final_release</code> and compares it to multiple
 time series in <code>df</code> for the same <code>id</code>. To always

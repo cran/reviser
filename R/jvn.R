@@ -1,4 +1,4 @@
-#' Jacobs-Van Norden model for data revisions
+#' Jacobs-Van Norden Model for Data Revisions
 #'
 #' Estimate the Jacobs and Van Norden (2011) state-space model for real-time
 #' data revisions, allowing for news and noise components and optional
@@ -93,6 +93,12 @@
 #'   \item{se_method}{The standard-error method used.}
 #'   \item{cov}{Estimated covariance matrix of the parameter estimates, if
 #'   available; otherwise `NULL`.}
+#'   \item{p0_regularized}{Logical; whether computing the Kalman filter's
+#'   stationary initial-state covariance at the converged estimate required
+#'   numerical regularization, which can happen for a fit close to a
+#'   non-stationary boundary. `NULL` when `solver_options$return_states =
+#'   FALSE`, since the initial-state covariance is then not computed.
+#'   `summary()` reports this when `TRUE`.}
 #' }
 #'
 #' @references Jacobs, Jan P. A. M. and Van Norden, Simon (2011). Modeling data
@@ -864,12 +870,22 @@ jvn_nowcast <- function(
       se_method = se_method_used,
       cov = cov_used
     )
-    class(out) <- c("jvn_model", class(out))
+    class(out) <- c("jvn_model", "revision_model", class(out))
     return(out)
   }
 
   # KFAS: stationary initialization (matches likelihood engine) ----
-  P0 <- jvn_stationary_P0(model_struct$Tmat, model_struct$R, model_struct$Q)
+  # This is the converged estimate, evaluated once, so unlike the inner-loop
+  # call in jvn_negloglik_contrib(), whether P0 required regularization is
+  # worth reporting: it is carried on the fitted object and surfaced by
+  # summary.revision_model() through spec_lines.jvn_model().
+  p0_result <- jvn_stationary_P0(
+    model_struct$Tmat,
+    model_struct$R,
+    model_struct$Q
+  )
+  P0 <- p0_result$P0
+  p0_regularized <- p0_result$regularized
 
   if (default_solver_options$kfas_init == "stationary") {
     a1 <- rep(0, model_struct$m)
@@ -995,10 +1011,11 @@ jvn_nowcast <- function(
     data = df,
     scale = scale_info,
     se_method = se_method_used,
-    cov = cov_used
+    cov = cov_used,
+    p0_regularized = p0_regularized
   )
 
-  class(out) <- c("jvn_model", class(out))
+  class(out) <- c("jvn_model", "revision_model", class(out))
   out
 }
 
@@ -1289,12 +1306,35 @@ jvn_update_matrices <- function(model_struct, params) {
 #' Compute the stationary initial covariance matrix
 #'
 #' Compute the stationary state covariance matrix `P0` from the discrete
-#' Lyapunov equation
-#' \deqn{vec(P) = (I - T \otimes T)^{-1} vec(R Q R').}
+#' Lyapunov equation \eqn{P = T P T' + S} with \eqn{S = R Q R'}. This is the
+#' initialization used by the custom likelihood engine and matches the
+#' `InitP0()` logic in the original GAUSS code.
 #'
-#' This is the initialization used by the custom likelihood engine and matches
-#' the `InitP0()` logic in the original GAUSS code.
+#' The transition matrix `T` in this model is diagonalizable for every
+#' parameter value the estimator can reach: the AR block is a companion
+#' matrix (diagonalizable whenever its roots are simple, which holds off a
+#' measure-zero boundary), and the news/noise blocks are already diagonal. In
+#' the eigenbasis `T = V diag(lambda) V^{-1}`, the Lyapunov equation becomes,
+#' with `S_tilde = V^{-1} S V^{-T}`,
+#' \deqn{\tilde P_{ij} = \tilde S_{ij} / (1 - \lambda_i \lambda_j),}
+#' an elementwise divide instead of a dense linear solve on the
+#' \eqn{m^2 \times m^2} matrix `I - T \otimes T`. This is cheaper (`O(m^3)`
+#' versus `O(m^6)`) and, importantly, isolates exactly which mode is
+#' responsible when the system is near a non-stationary boundary: it is the
+#' pair `(i, j)` with `lambda_i * lambda_j` near 1, not a generic condition
+#' number on the full Kronecker system.
 #'
+#' During optimizer search, trial parameter vectors routinely imply a
+#' momentarily non-stationary or defective `T`; regularizing those cases here
+#' is expected and is not reported (a fitted object's `p0_regularized` field
+#' reports the diagnosis only for the converged estimate, once, in
+#' [summary.revision_model()]). When `T` is not diagonalizable, or its
+#' eigenvector matrix is too ill-conditioned to trust, this falls back to
+#' the general dense solve via [jvn_stationary_p0_dense()].
+#'
+#' @return A list with components `P0` (the stationary covariance matrix) and
+#'   `regularized` (logical; whether any near-singular mode had to be
+#'   floored to keep the solve finite).
 #' @keywords internal
 #' @noRd
 jvn_stationary_P0 <- function(Tmat, R, Q, ridge = 1e-10, cond_max = 1e12) {
@@ -1302,15 +1342,93 @@ jvn_stationary_P0 <- function(Tmat, R, Q, ridge = 1e-10, cond_max = 1e12) {
   stopifnot(ncol(Tmat) == m)
 
   S <- tcrossprod(R %*% Q, R)
+
+  eig <- tryCatch(eigen(Tmat), error = function(e) NULL)
+  use_eigen <- !is.null(eig)
+
+  if (use_eigen) {
+    V <- eig$vectors
+    lambda <- eig$values
+    v_cond <- tryCatch(kappa(V, exact = FALSE), error = function(e) Inf)
+    use_eigen <- is.finite(v_cond) && v_cond <= cond_max
+  }
+
+  regularized <- FALSE
+  P0 <- NULL
+
+  if (use_eigen) {
+    Vinv <- solve(V)
+    S_tilde <- Vinv %*% S %*% t(Vinv)
+    denom <- 1 - outer(lambda, lambda)
+
+    mod_denom <- Mod(denom)
+    near_singular <- mod_denom < ridge
+    if (any(near_singular)) {
+      regularized <- TRUE
+      # Floor the magnitude at `ridge` while keeping the original phase, so
+      # a mode that is merely small keeps its direction (persistent-but-
+      # stable vs. mildly explosive); a mode that underflows to exactly
+      # zero has no phase to preserve, so it defaults to positive real
+      # (the stable side) rather than collapsing the floor itself to zero.
+      has_phase <- mod_denom >= .Machine$double.eps
+      sgn <- denom
+      sgn[has_phase] <- denom[has_phase] / mod_denom[has_phase]
+      sgn[!has_phase] <- 1 + 0i
+      denom[near_singular] <- sgn[near_singular] * ridge
+    }
+
+    P_tilde <- S_tilde / denom
+    P_complex <- V %*% P_tilde %*% t(V)
+
+    # T is real, so P should be real; a non-negligible imaginary part means
+    # the eigenbasis was numerically untrustworthy despite passing the
+    # conditioning check above, so fall back to the dense solve instead.
+    im_scale <- max(Mod(Im(P_complex)))
+    re_scale <- max(1, max(Mod(Re(P_complex))))
+    if (is.finite(im_scale) && im_scale <= 1e-6 * re_scale) {
+      P0 <- Re(P_complex)
+    } else {
+      use_eigen <- FALSE
+    }
+  }
+
+  if (!use_eigen) {
+    dense <- jvn_stationary_p0_dense(
+      Tmat, S,
+      ridge = ridge, cond_max = cond_max
+    )
+    P0 <- dense$P0
+    regularized <- dense$regularized
+  }
+
+  P0 <- (P0 + t(P0)) / 2 # symmetrize
+  list(P0 = P0, regularized = regularized)
+}
+
+#' Dense fallback for the stationary initial covariance matrix
+#'
+#' Solves the same Lyapunov equation as [jvn_stationary_P0()] via the general
+#' `vec(P) = (I - T \otimes T)^{-1} vec(S)` system, for the rare case where
+#' `T` is not (numerically) diagonalizable. Kept as a fallback rather than
+#' the default because it forms a dense \eqn{m^2 \times m^2} matrix.
+#'
+#' @return A list with components `P0` and `regularized`, as in
+#'   [jvn_stationary_P0()].
+#' @keywords internal
+#' @noRd
+jvn_stationary_p0_dense <- function(Tmat, S, ridge = 1e-10, cond_max = 1e12) {
+  m <- nrow(Tmat)
   A <- diag(m * m) - kronecker(Tmat, Tmat)
   b <- as.vector(S)
+  regularized <- FALSE
 
   # Try direct solve first
   vecP <- tryCatch(solve(A, b), error = function(e) NULL)
 
   # If solve failed or matrix is nasty, add ridge (scaled) and retry
   if (is.null(vecP)) {
-    # scale ridge to typical magnitude of A (avoids “too small to matter” ridge)
+    regularized <- TRUE
+    # scale ridge to typical magnitude of A (avoids "too small to matter" ridge)
     scaleA <- mean(abs(diag(A)))
     if (!is.finite(scaleA) || scaleA <= 0) scaleA <- 1
     vecP <- solve(A + (ridge * scaleA) * diag(m * m), b)
@@ -1318,6 +1436,7 @@ jvn_stationary_P0 <- function(Tmat, R, Q, ridge = 1e-10, cond_max = 1e12) {
     # optional conditioning check (helps avoid garbage P0 when nearly singular)
     cond <- tryCatch(kappa(A, exact = FALSE), error = function(e) Inf)
     if (!is.finite(cond) || cond > cond_max) {
+      regularized <- TRUE
       scaleA <- mean(abs(diag(A)))
       if (!is.finite(scaleA) || scaleA <= 0) scaleA <- 1
       vecP <- solve(A + (ridge * scaleA) * diag(m * m), b)
@@ -1326,7 +1445,7 @@ jvn_stationary_P0 <- function(Tmat, R, Q, ridge = 1e-10, cond_max = 1e12) {
 
   P0 <- matrix(vecP, nrow = m, ncol = m)
   P0 <- (P0 + t(P0)) / 2 # symmetrize
-  P0
+  list(P0 = P0, regularized = regularized)
 }
 
 
@@ -1430,8 +1549,9 @@ jvn_kalman_loglik <- function(
     tmpZ <- backsolve(cholF, Zt, transpose = TRUE)
     Finv_Zt <- backsolve(cholF, tmpZ)
 
-    # Kalman gain: K = P Z' F^{-1}
-    K <- P %*% t(Finv_Zt)
+    # Kalman gain: K = P Z' F^{-1}, a tcrossprod rather than an explicit
+    # transpose-and-multiply.
+    K <- tcrossprod(P, Finv_Zt)
 
     # Update
     a <- a + K %*% v
@@ -1477,7 +1597,7 @@ jvn_negloglik_contrib <- function(
     if (length(idx_sd) > 0) theta[idx_sd] <- exp(theta[idx_sd])
   }
 
-  # GAUSS-like “keep AR sane” soft constraint: sum(rho) in (-1,1)
+  # GAUSS-like "keep AR sane" soft constraint: sum(rho) in (-1,1)
   rho <- theta[info$ar_coef_idx]
   s <- sum(rho)
   if (!is.finite(s) || abs(s) >= 0.999) {
@@ -1487,9 +1607,12 @@ jvn_negloglik_contrib <- function(
   # Update matrices
   ms <- jvn_update_matrices(model_struct, theta)
 
-  # Stationary P0 (InitP0) — fail-safe
+  # Stationary P0 (InitP0) -- fail-safe. Trial parameter vectors during
+  # search routinely imply a momentarily non-stationary system, so whether
+  # this particular trial needed regularization is not reported here; only
+  # the converged estimate's P0 is checked (see the call in jvn_nowcast()).
   P0 <- tryCatch(
-    jvn_stationary_P0(ms$Tmat, ms$R, ms$Q),
+    jvn_stationary_P0(ms$Tmat, ms$R, ms$Q)$P0,
     error = function(e) NULL
   )
   if (is.null(P0)) {
@@ -1789,13 +1912,15 @@ jvn_init_params <- function(model_struct, data, transform_se = TRUE) {
 #' QML sandwich covariance for the JVN estimator
 #'
 #' Compute a quasi-maximum-likelihood sandwich covariance matrix of the form
-#' `solve(H) %*% X %*% solve(H)`, where `H` is the Hessian of the negative
-#' log-likelihood and `X` is the outer product of per-period score vectors.
+#' `H^{-1} X H^{-1}`, where `H` is the Hessian of the negative log-likelihood
+#' and `X` is the outer product of per-period score vectors. The bread is
+#' obtained through `invert_hessian()`, which uses the Cholesky factorization
+#' where it applies and reports a Hessian that is not positive definite rather
+#' than masking it.
 #'
-#' If the per-period contributions do not sum numerically to the full objective,
-#' the score contributions are rescaled accordingly before the sandwich
-#' matrix is
-#' formed.
+#' If the per-period contributions do not sum numerically to the full
+#' objective, the score contributions are rescaled accordingly before the
+#' sandwich matrix is formed.
 #'
 #' @keywords internal
 #' @noRd
@@ -2019,174 +2144,4 @@ jvn_param_table <- function(params, se, param_info) {
     Std.Error = se,
     row.names = NULL
   )
-}
-
-#' Summary method for JVN model objects
-#'
-#' Print a compact summary of a fitted `jvn_model`, including convergence
-#' status, information criteria, and parameter estimates.
-#'
-#' @param object An object of class `jvn_model`.
-#' @param ... Unused; included for method compatibility.
-#'
-#' @return The input object, invisibly.
-#'
-#' @method summary jvn_model
-#' @examples
-#' \donttest{
-#' gdp_growth <- dplyr::filter(
-#'   tsbox::ts_pc(reviser::gdp),
-#'   id == "EA",
-#'   time >= min(pub_date),
-#'   time <= as.Date("2020-01-01")
-#' )
-#' gdp_growth <- tidyr::drop_na(gdp_growth)
-#' df <- get_nth_release(gdp_growth, n = 0:3)
-#'
-#' result <- jvn_nowcast(
-#'   df = df,
-#'   e = 4,
-#'   ar_order = 2,
-#'   h = 0,
-#'   include_news = TRUE,
-#'   include_noise = TRUE
-#' )
-#' summary(result)
-#' }
-#'
-#' @family revision nowcasting
-#' @export
-summary.jvn_model <- function(object, ...) {
-  cat("\n=== Jacobs-Van Norden Model ===\n\n")
-
-  # Fall back for objects fitted before `model_type` was recorded.
-  model_type <- rlang::`%||%`(object$model_type, "news and noise")
-  cat("Specification:", model_type, "\n")
-
-  if (!is.null(object$spec)) {
-    cat("AR order:", object$spec$ar_order, "\n")
-    cat(
-      "Components: news =", object$spec$include_news,
-      "| noise =", object$spec$include_noise,
-      "| spillovers =", object$spec$include_spillovers, "\n"
-    )
-  }
-  if (!is.null(object$method)) {
-    cat("Estimation method:", toupper(object$method), "\n")
-  }
-
-  cat(
-    "Convergence:",
-    ifelse(
-      object$convergence == 0,
-      "Success",
-      "Failed"
-    ),
-    "\n"
-  )
-  cat("Log-likelihood:", round(object$loglik, 2), "\n")
-  cat("AIC:", round(object$aic, 2), "\n")
-  cat("BIC:", round(object$bic, 2), "\n\n")
-
-  cat("Parameter Estimates:\n")
-  df_print <- object$params
-  df_print$Estimate <- sprintf("%.3f", df_print$Estimate)
-  df_print$Std.Error <- sprintf("%.3f", df_print$Std.Error)
-  print(df_print, row.names = FALSE, quote = FALSE)
-
-  cat("\n")
-  invisible(object)
-}
-
-
-#' Print method for JVN model objects
-#'
-#' Default print method for `jvn_model` objects. This method dispatches to
-#' `summary.jvn_model()` for a consistent console display.
-#'
-#' @param x An object of class `jvn_model`.
-#' @param ... Additional arguments passed to `summary.jvn_model()`.
-#'
-#' @return The input object, invisibly.
-#'
-#' @method print jvn_model
-#' @examples
-#' \donttest{
-#' gdp_growth <- dplyr::filter(
-#'   tsbox::ts_pc(reviser::gdp),
-#'   id == "EA",
-#'   time >= min(pub_date),
-#'   time <= as.Date("2020-01-01")
-#' )
-#' gdp_growth <- tidyr::drop_na(gdp_growth)
-#' df <- get_nth_release(gdp_growth, n = 0:3)
-#'
-#' result <- jvn_nowcast(
-#'   df = df,
-#'   e = 4,
-#'   ar_order = 2,
-#'   h = 0,
-#'   include_news = TRUE,
-#'   include_noise = TRUE
-#' )
-#' result
-#' }
-#'
-#' @family revision nowcasting
-#' @export
-print.jvn_model <- function(x, ...) {
-  summary.jvn_model(x, ...)
-}
-
-#' Plot JVN model results
-#'
-#' Plot filtered or smoothed estimates for a selected state from a fitted
-#' `jvn_model`.
-#'
-#' @param x An object of class `jvn_model`.
-#' @param state Character scalar giving the state to visualize. Defaults to
-#'   `"true_lag_0"`.
-#' @param type Character scalar indicating whether `"filtered"` or `"smoothed"`
-#'   estimates should be plotted.
-#' @param ... Additional arguments passed to `plot.revision_model()`.
-#' @details This method requires `x$states` to be available. If the model was
-#'   fitted with `solver_options$return_states = FALSE`, plotting is not
-#'   possible.
-#'
-#' @srrstats {TS5.0} Implements default plot methods for class system
-#' @srrstats {TS5.1} Time axis labeling (delegates to base method)
-#' @srrstats {TS5.2} Time on horizontal axis (delegates to base method)
-#' @srrstats {TS5.6} Distributional limits shown (confidence intervals)
-#' @srrstats {TS5.7} Includes model and forecast values in plot
-#' @srrstats {TS5.8} Visual distinction between model and forecast values
-#'
-#' @return A `ggplot2` object.
-#'
-#' @examples
-#' \donttest{
-#' gdp_growth <- dplyr::filter(
-#'   tsbox::ts_pc(reviser::gdp),
-#'   id == "EA",
-#'   time >= min(pub_date),
-#'   time <= as.Date("2020-01-01")
-#' )
-#' gdp_growth <- tidyr::drop_na(gdp_growth)
-#' df <- get_nth_release(gdp_growth, n = 0:3)
-#'
-#' result <- jvn_nowcast(
-#'   df = df,
-#'   e = 4,
-#'   ar_order = 2,
-#'   h = 0,
-#'   include_news = TRUE,
-#'   include_noise = TRUE
-#' )
-#' plot(result)
-#' }
-#'
-#' @family revision nowcasting
-#' @export
-plot.jvn_model <- function(x, state = "true_lag_0", type = "filtered", ...) {
-  # Forward to the base method with JVN defaults
-  plot.revision_model(x, state = state, type = type, ...)
 }

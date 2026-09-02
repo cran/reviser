@@ -181,7 +181,7 @@ plot_vintages(
   subtitle = "qoq growth rates")
 ```
 
-<img src="man/figures/README-readme-example-1.png" alt="" width="100%" />
+<img src="man/figures/README-readme-example-1.png" width="100%" />
 
 ``` r
 
@@ -236,6 +236,9 @@ print(summary)
 #> id=US, release=release_6:
 #>   • No significant bias detected (p = 0.202 )
 #>   • Moderate revision volatility (Noise/Signal = 0.13 )
+```
+
+``` r
 
 efficient_release <- get_first_efficient_release(df, final_release)
 summary(efficient_release)
@@ -258,14 +261,15 @@ summary(efficient_release)
 #> Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 #> 
 #> Residual standard error: 0.2518 on 166 degrees of freedom
-#>   (10 observations deleted due to missingness)
+#>   (10 Beobachtungen als fehlend gelöscht)
 #> Multiple R-squared:  0.9523, Adjusted R-squared:  0.952 
 #> F-statistic:  3314 on 1 and 166 DF,  p-value: < 2.2e-16
 #> 
 #> 
 #> Test summary: 
+#> Linear hypothesis test
 #> 
-#> Linear hypothesis test:
+#> Hypothesis:
 #> (Intercept) = 0
 #> release_0 = 1
 #> 
@@ -303,6 +307,6 @@ By contributing to this project, you agree to abide by its terms.
 
 ## Citation
 
-Burri M, Wegmueller P (2025). reviser: Tools for Studying Revision
-Properties in Real-Time Time Series Vintages. R package version 0.1.1,
+Burri M, Wegmueller P (2026). *reviser: Analyzing Revisions in Real-Time
+Time Series Vintages*. R package version 0.3.0,
 <https://docs.ropensci.org/reviser/>.

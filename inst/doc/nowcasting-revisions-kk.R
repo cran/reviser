@@ -88,11 +88,16 @@ fit_kk <- load_or_build_vignette_result(
 summary(fit_kk)
 
 ## ----warning = FALSE, message = FALSE-----------------------------------------
-fit_kk$params
+coef(fit_kk)
 
 ## ----warning = FALSE, message = FALSE-----------------------------------------
-fit_kk$states |>
-  dplyr::filter(filter == "smoothed") |>
+logLik(fit_kk)
+AIC(fit_kk)
+BIC(fit_kk)
+nobs(fit_kk)
+
+## ----warning = FALSE, message = FALSE-----------------------------------------
+states(fit_kk, filter = "smoothed") |>
   dplyr::slice_tail(n = 8)
 
 ## ----warning = FALSE, message = FALSE-----------------------------------------

@@ -2,7 +2,7 @@
 % Please edit documentation in R/jvn.R
 \name{jvn_nowcast}
 \alias{jvn_nowcast}
-\title{Jacobs-Van Norden model for data revisions}
+\title{Jacobs-Van Norden Model for Data Revisions}
 \usage{
 jvn_nowcast(
   df,
@@ -123,6 +123,11 @@ optimizer.}
 \item{se_method}{The standard-error method used.}
 \item{cov}{Estimated covariance matrix of the parameter estimates, if
 available; otherwise \code{NULL}.}
+\item{p0_regularized}{Logical; whether computing the Kalman filter's
+stationary initial-state covariance at the converged estimate required
+numerical regularization, which can happen for a fit close to a
+non-stationary boundary. \code{NULL} when \code{solver_options$return_states = FALSE}, since the initial-state covariance is then not computed.
+\code{summary()} reports this when \code{TRUE}.}
 }
 }
 \description{
@@ -160,27 +165,18 @@ of Econometrics}.
 }
 \seealso{
 Other revision nowcasting: 
-\code{\link{coef.jvn_model}()},
-\code{\link{coef.kk_model}()},
-\code{\link{fitted.jvn_model}()},
-\code{\link{fitted.kk_model}()},
+\code{\link{coef.revision_model}()},
+\code{\link{fitted.revision_model}()},
 \code{\link{kk_nowcast}()},
-\code{\link{logLik.jvn_model}()},
-\code{\link{logLik.kk_model}()},
-\code{\link{nobs.jvn_model}()},
-\code{\link{nobs.kk_model}()},
-\code{\link{plot.jvn_model}()},
-\code{\link{plot.kk_model}()},
-\code{\link{predict.jvn_model}()},
-\code{\link{predict.kk_model}()},
-\code{\link{print.jvn_model}()},
-\code{\link{print.kk_model}()},
-\code{\link{residuals.jvn_model}()},
-\code{\link{residuals.kk_model}()},
+\code{\link{logLik.revision_model}()},
+\code{\link{nobs.revision_model}()},
+\code{\link{plot.revision_model}()},
+\code{\link{predict.revision_model}()},
+\code{\link{print.revision_model}()},
+\code{\link{residuals.revision_model}()},
+\code{\link{revision_model}},
 \code{\link{states}()},
-\code{\link{summary.jvn_model}()},
-\code{\link{summary.kk_model}()},
-\code{\link{vcov.jvn_model}()},
-\code{\link{vcov.kk_model}()}
+\code{\link{summary.revision_model}()},
+\code{\link{vcov.revision_model}()}
 }
 \concept{revision nowcasting}
